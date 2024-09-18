@@ -83,3 +83,20 @@
 
         <!-- SEARCH BAR HEADER -->
         <header class="d-flex justify-content-between align-items-center mb-4 gap-3 flex-wrap">
+          <div class="search-container position-relative flex-grow-1 max-width-md" style="max-width: 400px;">
+            <input type="text" id="search-input" class="form-control bg-dark border-secondary text-white rounded-pill px-4 py-2 small" placeholder="🔍 Search songs, albums, artists..." />
+          </div>
+          <div class="user-profile-badge d-flex align-items-center gap-2 glass-card px-3 py-1 text-white">
+            <div class="avatar-dot bg-success rounded-circle" style="width: 8px; height: 8px;"></div>
+            <span class="small font-gilroy-bold">Local Host</span>
+          </div>
+        </header>
+
+        <!-- TAB: HOME / DASHBOARD -->
+        <div id="pane-home" class="tab-pane">
+          <div class="row mb-4">
+            <div class="col-12">
+              <h1 id="home-greeting" class="font-gilroy-bold text-white mb-2">Good Day, Music Lover</h1>
+              <p class="text-white-50">Welcome to BeatStream. Listen to your local library or experience the real-time synth audio.</p>
+            </div>
+          </div>
