@@ -66,3 +66,20 @@
           <label for="import-audio-input" class="btn btn-outline-light w-100 d-flex align-items-center justify-content-center gap-2 cursor-pointer py-2">
             <span>📥</span> <span>Import Track</span>
           </label>
+          <input type="file" id="import-audio-input" accept="audio/*" multiple class="d-none" />
+        </div>
+      </aside>
+
+      <!-- MAIN DISPLAY AREA -->
+      <main class="main-content">
+        
+        <!-- Upload Progress Indicator Card -->
+        <div id="upload-progress-card" class="glass-card p-3 mb-4 d-none">
+          <div class="d-flex align-items-center gap-3">
+            <div class="spinner-border text-info spinner-border-sm" role="status"></div>
+            <span id="upload-progress-text" class="text-white-50 small">Uploading track...</span>
+          </div>
+        </div>
+
+        <!-- SEARCH BAR HEADER -->
+        <header class="d-flex justify-content-between align-items-center mb-4 gap-3 flex-wrap">
