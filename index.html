@@ -168,3 +168,20 @@
           <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
               <h2 class="font-gilroy-bold text-white mb-1">Your Playlists</h2>
+              <p class="text-white-50 small">Manage custom collections and reorder tracks.</p>
+            </div>
+            <button class="btn btn-info font-gilroy-bold rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#createPlaylistModal">
+              ➕ Create Playlist
+            </button>
+          </div>
+
+          <div id="playlists-container" class="row">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- TAB: PLAYLIST DETAIL -->
+        <div id="pane-playlist-detail" class="tab-pane d-none">
+          <div id="playlist-detail-banner" class="detail-banner d-flex gap-4 align-items-end flex-wrap">
+            <div id="playlist-detail-cover" class="detail-cover-box"></div>
+            <div class="flex-grow-1 text-white">
