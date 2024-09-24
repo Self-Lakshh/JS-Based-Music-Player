@@ -27,3 +27,33 @@
 
 body.theme-midnight-blue {
   /* Matches default root */
+}
+
+body.theme-aurora-purple {
+  --bg-gradient: linear-gradient(135deg, #0e051a 0%, #1c0c2b 100%);
+  --surface-color: rgba(28, 16, 48, 0.55);
+  --surface-border: rgba(255, 255, 255, 0.08);
+  --accent-color: #a18cd1;
+  --accent-secondary: #fbc2eb;
+  --accent-glow: rgba(161, 140, 209, 0.4);
+  --text-main: #f8fafc;
+  --text-muted: #cbd5e1;
+  --card-hover-bg: rgba(255, 255, 255, 0.08);
+  --player-bar-bg: rgba(14, 8, 24, 0.85);
+  --sidebar-bg: rgba(8, 4, 16, 0.6);
+}
+
+body.theme-deep-graphite {
+  /* Spotify Theme */
+  --bg-gradient: linear-gradient(135deg, #121212 0%, #1e1e1e 100%);
+  --surface-color: rgba(24, 24, 24, 0.6);
+  --surface-border: rgba(255, 255, 255, 0.08);
+  --accent-color: #1db954; /* Spotify Green */
+  --accent-secondary: #1ed760;
+  --accent-glow: rgba(29, 185, 84, 0.4);
+  --text-main: #ffffff;
+  --text-muted: #b3b3b3;
+  --card-hover-bg: rgba(255, 255, 255, 0.1);
+  --player-bar-bg: rgba(18, 18, 18, 0.9);
+  --sidebar-bg: rgba(0, 0, 0, 0.7);
+}
