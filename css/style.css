@@ -87,3 +87,33 @@ body.theme-warm-ivory {
   --sidebar-bg: rgba(242, 242, 247, 0.65);
 }
 
+/* --- RESET & LAYOUT --- */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg-gradient);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  height: 100vh;
+  overflow: hidden;
+  transition: background var(--transition-speed) ease;
+}
+
+.font-gilroy-bold {
+  font-family: var(--font-title);
+  font-weight: 700;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
