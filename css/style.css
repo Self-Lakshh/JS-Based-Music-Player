@@ -117,3 +117,33 @@ body {
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-color);
+}
+
+/* --- APP CONTAINERS --- */
+
+#beatstream-app {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+}
+
+.app-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Sidebar navigation */
+.sidebar {
+  width: 250px;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--surface-border);
+  padding: 2rem 1.25rem;
+  display: flex;
