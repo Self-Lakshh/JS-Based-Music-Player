@@ -177,3 +177,33 @@ body {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 1.5px;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.sidebar-nav-list {
+  list-style: none;
+  margin-bottom: 2rem;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  margin-bottom: 4px;
+}
+
+.sidebar-nav-item:hover {
+  background: var(--card-hover-bg);
+  color: var(--text-main);
+}
+
+.sidebar-nav-item.active {
+  background: var(--accent-color);
