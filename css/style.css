@@ -267,3 +267,33 @@ body {
 
 .quick-cover-gradient {
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.album-card-cover-container {
+  overflow: hidden;
+  border-radius: 8px;
+  aspect-ratio: 1/1;
+  background: rgba(0,0,0,0.2);
+}
+
+.album-card-img, .album-card-gradient {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-speed);
+}
+
+.album-card-gradient {
+  display: block;
+}
+
+.album-card:hover .album-card-img,
+.album-card:hover .album-card-gradient {
+  transform: scale(1.05);
+}
+
+.album-card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
