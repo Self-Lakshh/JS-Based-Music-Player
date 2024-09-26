@@ -297,3 +297,33 @@ body {
   top: 0;
   left: 0;
   width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.album-card-cover-container:hover .album-card-overlay {
+  opacity: 1;
+}
+
+.artist-avatar {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-secondary), var(--accent-color));
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  font-size: 2.2rem;
+  transition: transform 0.3s ease;
+}
+
+.artist-circle-card:hover .artist-avatar {
+  transform: scale(1.06) rotate(5deg);
+}
+
+/* --- SONGS VIEW TABLE --- */
+
+.custom-table {
+  color: var(--text-main);
+  border-collapse: separate;
+  border-spacing: 0 8px;
