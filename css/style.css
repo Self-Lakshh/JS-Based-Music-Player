@@ -356,3 +356,33 @@ body {
 
 .custom-table td:first-child {
   border-left: 1px solid var(--surface-border);
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.custom-table td:last-child {
+  border-right: 1px solid var(--surface-border);
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.custom-table tr:hover td {
+  background: var(--card-hover-bg);
+}
+
+.playing-row td {
+  border-color: var(--accent-color) !important;
+  color: var(--accent-color) !important;
+}
+
+.playing-row .text-white, .playing-row .text-white-50 {
+  color: var(--accent-color) !important;
+}
+
+.song-table-cover {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
