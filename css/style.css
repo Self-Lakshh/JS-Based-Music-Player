@@ -327,3 +327,32 @@ body {
   color: var(--text-main);
   border-collapse: separate;
   border-spacing: 0 8px;
+  margin-top: 1.5rem;
+}
+
+.custom-table th {
+  border-bottom: none;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  padding: 10px 15px;
+}
+
+.custom-table tr {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+}
+
+.custom-table td {
+  padding: 12px 15px;
+  border: none;
+  vertical-align: middle;
+  background: var(--surface-color);
+  border-top: 1px solid var(--surface-border);
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.custom-table td:first-child {
+  border-left: 1px solid var(--surface-border);
