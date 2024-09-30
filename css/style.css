@@ -386,3 +386,33 @@ body {
   overflow: hidden;
   flex-shrink: 0;
 }
+
+.song-table-cover img, .table-cover-gradient {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hover-link:hover {
+  text-decoration: underline !important;
+  color: var(--accent-color) !important;
+}
+
+.width-row-num {
+  width: 40px;
+}
+
+/* --- PLAYLIST CARDS --- */
+
+.playlist-cover-gradient {
+  width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  transition: transform 0.25s;
+}
+
+.playlist-card:hover .playlist-cover-gradient {
