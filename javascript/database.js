@@ -47,3 +47,28 @@ const SEED_DATA = [
   ['bolly-32', 'Senorita', 'Farhan Akhtar, Hrithik, Abhay', 'Zindagi Na Milegi Dobara', 200, 'Dance', 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'],
   ['bolly-33', 'Ik Junoon', 'Vishal Dadlani', 'Zindagi Na Milegi Dobara', 185, 'Dance', 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'],
   ['bolly-34', 'Khaabon Ke Parindey', 'Mohit Chauhan', 'Zindagi Na Milegi Dobara', 215, 'Acoustic', 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'],
+  ['bolly-35', 'Der Lagi Lekin', 'Shankar Mahadevan', 'Zindagi Na Milegi Dobara', 195, 'Sad', 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'],
+  // Rockstar (36-41)
+  ['bolly-36', 'Kun Faya Kun', 'A.R. Rahman, Mohit Chauhan', 'Rockstar', 250, 'Sufi', 'linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)'],
+  ['bolly-37', 'Nadaan Parindey', 'A.R. Rahman, Mohit Chauhan', 'Rockstar', 230, 'Rock', 'linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)'],
+  ['bolly-38', 'Phir Se Ud Chala', 'Mohit Chauhan', 'Rockstar', 195, 'Acoustic', 'linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)'],
+  ['bolly-39', 'Sadda Haq', 'Mohit Chauhan', 'Rockstar', 220, 'Hard Rock', 'linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)'],
+  ['bolly-40', 'Jo Bhi Main', 'Mohit Chauhan', 'Rockstar', 205, 'Rock', 'linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)'],
+  ['bolly-41', 'Hawaa Hawaa', 'Mohit Chauhan', 'Rockstar', 210, 'Folk Upbeat', 'linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)'],
+  // Kabir Singh (42-46)
+  ['bolly-42', 'Bekhayali', 'Sachet Tandon', 'Kabir Singh', 225, 'Sad Rock', 'linear-gradient(135deg, #ff0844 0%, #ffb199 100%)'],
+  ['bolly-43', 'Kaise Hua', 'Vishal Mishra', 'Kabir Singh', 200, 'Romantic', 'linear-gradient(135deg, #ff0844 0%, #ffb199 100%)'],
+  ['bolly-44', 'Tujhe Kitna Chahi Aur', 'Arijit Singh', 'Kabir Singh', 190, 'Romantic', 'linear-gradient(135deg, #ff0844 0%, #ffb199 100%)'],
+  ['bolly-45', 'Pehla Pyaar', 'Armaan Malik', 'Kabir Singh', 180, 'Romantic', 'linear-gradient(135deg, #ff0844 0%, #ffb199 100%)'],
+  ['bolly-46', 'Tera Ban Jaunga', 'Akhil Sachdeva, Tulsi Kumar', 'Kabir Singh', 195, 'Romantic', 'linear-gradient(135deg, #ff0844 0%, #ffb199 100%)'],
+  // Ae Dil Hai Mushkil (47-51)
+  ['bolly-47', 'Channa Mereya', 'Arijit Singh', 'Ae Dil Hai Mushkil', 210, 'Sad', 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)'],
+  ['bolly-48', 'Ae Dil Hai Mushkil', 'Arijit Singh', 'Ae Dil Hai Mushkil', 200, 'Romantic', 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)'],
+  ['bolly-49', 'Bulleya', 'Amit Mishra, Shilpa Rao', 'Ae Dil Hai Mushkil', 220, 'Rock Sufi', 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)'],
+  ['bolly-50', 'The Breakup Song', 'Arijit Singh, Badshah', 'Ae Dil Hai Mushkil', 190, 'Dance', 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)'],
+  ['bolly-51', 'Cutiepie', 'Nakash Aziz', 'Ae Dil Hai Mushkil', 175, 'Dance', 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)'],
+  // Jab We Met (52-56)
+  ['bolly-52', 'Tum Se Hi', 'Mohit Chauhan', 'Jab We Met', 210, 'Romantic', 'linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)'],
+  ['bolly-53', 'Ye Ishq Hai', 'Shreya Ghoshal', 'Jab We Met', 195, 'Dance', 'linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)'],
+  ['bolly-54', 'Mauja Hi Mauja', 'Mika Singh', 'Jab We Met', 200, 'Dance', 'linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)'],
+  ['bolly-55', 'Nagada Nagada', 'Sonu Nigam', 'Jab We Met', 190, 'Folk', 'linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)'],
