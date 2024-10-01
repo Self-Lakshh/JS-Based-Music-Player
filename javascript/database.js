@@ -22,3 +22,28 @@ const SEED_DATA = [
   ['bolly-11', 'Badtameez Dil', 'Benny Dayal', 'Yeh Jawaani Hai Deewani', 205, 'Dance', 'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)'],
   ['bolly-12', 'Ilahi', 'Arijit Singh', 'Yeh Jawaani Hai Deewani', 180, 'Upbeat', 'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)'],
   ['bolly-13', 'Balam Pichkari', 'Vishal Dadlani, Shalmali', 'Yeh Jawaani Hai Deewani', 210, 'Dance', 'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)'],
+  ['bolly-14', 'Subhanallah', 'Sreerama Chandra', 'Yeh Jawaani Hai Deewani', 175, 'Romantic', 'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)'],
+  ['bolly-15', 'Dilliwaali Girlfriend', 'Arijit Singh, Sunidhi', 'Yeh Jawaani Hai Deewani', 195, 'Dance', 'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)'],
+  // 3 Idiots (16-20)
+  ['bolly-16', 'Give Me Some Sunshine', 'Suraj Jagan, Sharman', '3 Idiots', 185, 'Acoustic', 'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)'],
+  ['bolly-17', 'Zoobi Doobi', 'Sonu Nigam, Shreya Ghoshal', '3 Idiots', 190, 'Upbeat', 'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)'],
+  ['bolly-18', 'Behti Hawa Sa Tha Wo', 'Shaan', '3 Idiots', 210, 'Sad', 'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)'],
+  ['bolly-19', 'Aal Izz Well', 'Sonu Nigam, Swanand', '3 Idiots', 220, 'Upbeat', 'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)'],
+  ['bolly-20', 'Jaane Nahin Denge Tujhe', 'Sonu Nigam', '3 Idiots', 200, 'Sad', 'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)'],
+  // Dhurandhar (21-25)
+  ['bolly-21', 'Dhurandhar Title Track', 'Sukhwinder Singh', 'Dhurandhar', 180, 'Epic', 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'],
+  ['bolly-22', 'Sanki Yaar', 'Mika Singh', 'Dhurandhar', 195, 'Rock', 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'],
+  ['bolly-23', 'Pyaar Ki Dhoon', 'Shreya Ghoshal', 'Dhurandhar', 170, 'Romantic', 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'],
+  ['bolly-24', 'Aag Ka Darya', 'KK', 'Dhurandhar', 215, 'Sad Rock', 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'],
+  ['bolly-25', 'Chalte Chalte', 'Udit Narayan', 'Dhurandhar', 185, 'Romantic', 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'],
+  // Om Shanti Om (26-30)
+  ['bolly-26', 'Ajab Si', 'KK', 'Om Shanti Om', 200, 'Romantic', 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'],
+  ['bolly-27', 'Deewangi Deewangi', 'Udit Narayan, Shaan', 'Om Shanti Om', 240, 'Dance', 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'],
+  ['bolly-28', 'Main Agar Kahoon', 'Sonu Nigam, Shreya Ghoshal', 'Om Shanti Om', 210, 'Romantic', 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'],
+  ['bolly-29', 'Dastaan-E-Om Shanti Om', 'Shaan', 'Om Shanti Om', 230, 'Epic', 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'],
+  ['bolly-30', 'Jag Soona Soona Lage', 'Rahat Fateh Ali Khan', 'Om Shanti Om', 225, 'Sad', 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'],
+  // Zindagi Na Milegi Dobara (31-35)
+  ['bolly-31', 'Dil Dhadakne Do', 'Suraj Jagan, Jigar', 'Zindagi Na Milegi Dobara', 190, 'Upbeat', 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'],
+  ['bolly-32', 'Senorita', 'Farhan Akhtar, Hrithik, Abhay', 'Zindagi Na Milegi Dobara', 200, 'Dance', 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'],
+  ['bolly-33', 'Ik Junoon', 'Vishal Dadlani', 'Zindagi Na Milegi Dobara', 185, 'Dance', 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'],
+  ['bolly-34', 'Khaabon Ke Parindey', 'Mohit Chauhan', 'Zindagi Na Milegi Dobara', 215, 'Acoustic', 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'],
