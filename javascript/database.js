@@ -72,3 +72,28 @@ const SEED_DATA = [
   ['bolly-53', 'Ye Ishq Hai', 'Shreya Ghoshal', 'Jab We Met', 195, 'Dance', 'linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)'],
   ['bolly-54', 'Mauja Hi Mauja', 'Mika Singh', 'Jab We Met', 200, 'Dance', 'linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)'],
   ['bolly-55', 'Nagada Nagada', 'Sonu Nigam', 'Jab We Met', 190, 'Folk', 'linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)'],
+  ['bolly-56', 'Aaoge Jab Tum', 'Rashid Khan', 'Jab We Met', 230, 'Classical', 'linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)'],
+  // Dilwale Dulhania Le Jayenge (57-65)
+  ['bolly-57', 'Tujhe Dekha To', 'Kumar Sanu, Lata Mangeshkar', 'Dilwale Dulhania Le Jayenge', 210, 'Romantic', 'linear-gradient(135deg, #e6b980 0%, #eacda3 100%)'],
+  ['bolly-58', 'Mehndi Laga Ke Rakhna', 'Kumar Sanu, Lata Mangeshkar', 'Dilwale Dulhania Le Jayenge', 225, 'Dance', 'linear-gradient(135deg, #e6b980 0%, #eacda3 100%)'],
+  ['bolly-59', 'Mere Khwabon Mein', 'Lata Mangeshkar', 'Dilwale Dulhania Le Jayenge', 190, 'Upbeat', 'linear-gradient(135deg, #e6b980 0%, #eacda3 100%)'],
+  ['bolly-60', 'Ruk Ja O Dil Deewane', 'Udit Narayan', 'Dilwale Dulhania Le Jayenge', 200, 'Dance', 'linear-gradient(135deg, #e6b980 0%, #eacda3 100%)'],
+  ['bolly-61', 'Ho Gaya Hai Tujhko', 'Udit Narayan, Lata Mangeshkar', 'Dilwale Dulhania Le Jayenge', 220, 'Romantic', 'linear-gradient(135deg, #e6b980 0%, #eacda3 100%)'],
+  ['bolly-62', 'Zara Sa Jhoom Loon Main', 'Abhijeet, Asha Bhosle', 'Dilwale Dulhania Le Jayenge', 180, 'Dance', 'linear-gradient(135deg, #e6b980 0%, #eacda3 100%)'],
+  ['bolly-63', 'Ghar Aaja Pardesi', 'Manpreet Kaur', 'Dilwale Dulhania Le Jayenge', 240, 'Folk', 'linear-gradient(135deg, #e6b980 0%, #eacda3 100%)'],
+  ['bolly-64', 'Tujh Mein Rab Dikhta Hai', 'Roop Kumar Rathod', 'Rab Ne Bana Di Jodi', 210, 'Romantic', 'linear-gradient(135deg, #e6b980 0%, #eacda3 100%)'],
+  ['bolly-65', 'Haule Haule', 'Sukhwinder Singh', 'Rab Ne Bana Di Jodi', 190, 'Romantic', 'linear-gradient(135deg, #e6b980 0%, #eacda3 100%)']
+];
+
+export const BOLLYWOOD_SEEDS = SEED_DATA.map(item => ({
+  id: item[0],
+  title: item[1],
+  artist: item[2],
+  album: item[3],
+  duration: item[4],
+  genre: item[5],
+  isProcedural: true,
+  coverGradient: item[6]
+}));
+
+const DB_NAME = 'BeatStreamDB';
