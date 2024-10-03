@@ -122,3 +122,28 @@ export const Database = {
       };
 
       request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        if (!db.objectStoreNames.contains(TRACK_STORE_NAME)) {
+          const store = db.createObjectStore(TRACK_STORE_NAME, { keyPath: 'id', autoIncrement: true });
+          store.createIndex('title', 'title', { unique: false });
+          store.createIndex('artist', 'artist', { unique: false });
+        }
+      };
+    });
+  },
+
+  /**
+   * Seeds default LocalStorage variables if not already present.
+   */
+  _initLocalStorage() {
+    // Default Settings
+    if (!localStorage.getItem('beatstream_settings')) {
+      localStorage.setItem('beatstream_settings', JSON.stringify({
+        theme: 'midnight-blue',
+        volume: 0.8,
+        speed: 1.0,
+        equalizer: [0, 0, 0, 0, 0], // Gain values for 60Hz, 230Hz, 910Hz, 4kHz, 14kHz
+        shuffle: false,
+        repeat: 'all', // all, one, off
+        spatializer: false
+      }));
