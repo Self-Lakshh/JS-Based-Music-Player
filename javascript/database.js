@@ -97,3 +97,28 @@ export const BOLLYWOOD_SEEDS = SEED_DATA.map(item => ({
 }));
 
 const DB_NAME = 'BeatStreamDB';
+const DB_VERSION = 1;
+const TRACK_STORE_NAME = 'tracks';
+
+export const Database = {
+  db: null,
+
+  /**
+   * Initializes IndexedDB and checks/seeds default values in LocalStorage.
+   */
+  async init() {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+      request.onerror = (event) => {
+        console.error('IndexedDB error:', event.target.error);
+        reject(event.target.error);
+      };
+
+      request.onsuccess = (event) => {
+        this.db = event.target.result;
+        this._initLocalStorage();
+        resolve(this.db);
+      };
+
+      request.onupgradeneeded = (event) => {
