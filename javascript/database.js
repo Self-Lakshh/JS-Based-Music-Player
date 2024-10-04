@@ -147,3 +147,28 @@ export const Database = {
         repeat: 'all', // all, one, off
         spatializer: false
       }));
+    }
+
+    // Default Playlists (Pre-load Favorites and Recently Played)
+    if (!localStorage.getItem('beatstream_playlists')) {
+      const defaultPlaylists = [
+        {
+          id: 'favorites',
+          name: 'My Favorites',
+          description: 'Your highly-rated songs, kept close.',
+          coverGradient: 'linear-gradient(135deg, #fbc2eb 0%, #a18cd1 100%)',
+          isSystem: true,
+          tracks: []
+        },
+        {
+          id: 'procedural',
+          name: 'Procedural Synth Tunes',
+          description: 'Procedurally generated ambient and chiptune audio.',
+          coverGradient: 'linear-gradient(135deg, #00f2fe 0%, #4facfe 100%)',
+          isSystem: true,
+          tracks: ['synth-1', 'synth-2', 'synth-3']
+        }
+      ];
+
+      // Generate movie-wise playlists
+      const movies = [...new Set(BOLLYWOOD_SEEDS.map(t => t.album))];
