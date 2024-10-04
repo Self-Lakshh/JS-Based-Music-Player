@@ -172,3 +172,28 @@ export const Database = {
 
       // Generate movie-wise playlists
       const movies = [...new Set(BOLLYWOOD_SEEDS.map(t => t.album))];
+      movies.forEach((movie, mIdx) => {
+        const movieTracks = BOLLYWOOD_SEEDS.filter(t => t.album === movie).map(t => t.id);
+        const coverGrad = BOLLYWOOD_SEEDS.find(t => t.album === movie).coverGradient;
+        defaultPlaylists.push({
+          id: `pl-movie-${mIdx}`,
+          name: `${movie} OST`,
+          description: `All original tracks from the movie ${movie}.`,
+          coverGradient: coverGrad,
+          tracks: movieTracks
+        });
+      });
+
+      localStorage.setItem('beatstream_playlists', JSON.stringify(defaultPlaylists));
+    }
+
+    if (!localStorage.getItem('beatstream_favorites')) {
+      localStorage.setItem('beatstream_favorites', JSON.stringify([]));
+    }
+
+    if (!localStorage.getItem('beatstream_history')) {
+      localStorage.setItem('beatstream_history', JSON.stringify([]));
+    }
+
+    if (!localStorage.getItem('beatstream_queue')) {
+      localStorage.setItem('beatstream_queue', JSON.stringify(BOLLYWOOD_SEEDS.map(t => t.id)));
