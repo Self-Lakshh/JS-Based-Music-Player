@@ -197,3 +197,28 @@ export const Database = {
 
     if (!localStorage.getItem('beatstream_queue')) {
       localStorage.setItem('beatstream_queue', JSON.stringify(BOLLYWOOD_SEEDS.map(t => t.id)));
+    }
+
+    if (!localStorage.getItem('beatstream_current_track_id')) {
+      localStorage.setItem('beatstream_current_track_id', 'bolly-1');
+    }
+
+    if (!localStorage.getItem('beatstream_playback_time')) {
+      localStorage.setItem('beatstream_playback_time', '0');
+    }
+  },
+
+  // --- SETTINGS MANAGEMENT ---
+  getSettings() {
+    return JSON.parse(localStorage.getItem('beatstream_settings'));
+  },
+
+  saveSettings(settings) {
+    const current = this.getSettings();
+    localStorage.setItem('beatstream_settings', JSON.stringify({ ...current, ...settings }));
+  },
+
+  // --- QUEUE MANAGEMENT ---
+  getQueue() {
+    return JSON.parse(localStorage.getItem('beatstream_queue')) || [];
+  },
