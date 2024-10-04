@@ -222,3 +222,28 @@ export const Database = {
   getQueue() {
     return JSON.parse(localStorage.getItem('beatstream_queue')) || [];
   },
+
+  saveQueue(queue) {
+    localStorage.setItem('beatstream_queue', JSON.stringify(queue));
+  },
+
+  getCurrentTrackId() {
+    return localStorage.getItem('beatstream_current_track_id') || 'synth-1';
+  },
+
+  saveCurrentTrackId(id) {
+    localStorage.setItem('beatstream_current_track_id', id);
+  },
+
+  getPlaybackTime() {
+    return parseFloat(localStorage.getItem('beatstream_playback_time') || '0');
+  },
+
+  savePlaybackTime(time) {
+    localStorage.setItem('beatstream_playback_time', time.toString());
+  },
+
+  // --- FAVORITES ---
+  getFavorites() {
+    return JSON.parse(localStorage.getItem('beatstream_favorites')) || [];
+  },
