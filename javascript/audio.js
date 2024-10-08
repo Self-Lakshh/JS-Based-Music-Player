@@ -51,3 +51,30 @@ export const AudioEngine = {
     this.eqFilters = this.eqFrequencies.map((freq) => {
       const filter = this.ctx.createBiquadFilter();
       filter.type = 'peaking';
+      filter.frequency.value = freq;
+      filter.Q.value = 1.0;
+      filter.gain.value = 0;
+      return filter;
+    });
+
+    // Create Stereo Panner Node
+    this.pannerNode = this.ctx.createStereoPanner();
+
+    // Create Gain Node (Volume)
+    this.gainNode = this.ctx.createGain();
+
+    // Create Analyser Node
+    this.analyserNode = this.ctx.createAnalyser();
+    this.analyserNode.fftSize = 1024;
+
+    // Route: Source -> EQ1 -> EQ2 -> EQ3 -> EQ4 -> EQ5 -> Panner -> Gain -> Analyser -> Destination
+    let currentConnector = this.sourceNode;
+    this.eqFilters.forEach((filter) => {
+      currentConnector.connect(filter);
+      currentConnector = filter;
+    });
+
+    currentConnector.connect(this.pannerNode);
+    this.pannerNode.connect(this.gainNode);
+    this.gainNode.connect(this.analyserNode);
+    this.analyserNode.connect(this.ctx.destination);
