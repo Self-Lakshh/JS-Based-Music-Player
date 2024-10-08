@@ -78,3 +78,30 @@ export const AudioEngine = {
     this.pannerNode.connect(this.gainNode);
     this.gainNode.connect(this.analyserNode);
     this.analyserNode.connect(this.ctx.destination);
+
+    // Audio Element Event Listeners
+    this.audioEl.addEventListener('timeupdate', () => {
+      if (!this.isSynthPlaying && this.onTimeUpdateCallback) {
+        this.onTimeUpdateCallback(this.audioEl.currentTime, this.audioEl.duration);
+      }
+    });
+
+    this.audioEl.addEventListener('ended', () => {
+      if (!this.isSynthPlaying && this.onTrackEndedCallback) {
+        this.onTrackEndedCallback();
+      }
+    });
+  },
+
+  resumeContext() {
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+  },
+
+  // --- CONTROLS ---
+
+  playLocalTrack(blob, seekTime = 0) {
+    this.init();
+    this.resumeContext();
+    this.stopSynth();
