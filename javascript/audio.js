@@ -159,3 +159,30 @@ export const AudioEngine = {
     }
   },
 
+  setVolume(volume) {
+    this.init();
+    // Clamp between 0 and 1
+    const vol = Math.max(0, Math.min(volume, 1));
+    if (this.gainNode) {
+      this.gainNode.gain.setValueAtTime(vol, this.ctx.currentTime);
+    }
+    if (this.audioEl) {
+      this.audioEl.volume = vol;
+    }
+  },
+
+  setPlaybackRate(rate) {
+    this.init();
+    if (this.audioEl) {
+      this.audioEl.playbackRate = rate;
+    }
+    // Update synth tempo multiplier
+    if (this.isSynthPlaying) {
+      this.synthTempo = this.getSynthBaseTempo() * rate;
+    }
+  },
+
+  setPan(pan) {
+    this.init();
+    if (this.pannerNode) {
+      this.pannerNode.pan.setValueAtTime(pan, this.ctx.currentTime);
