@@ -132,3 +132,30 @@ export const AudioEngine = {
       this.playSynthTrack(this.synthTrackId, this.synthVirtualTime);
     } else if (this.audioEl) {
       this.audioEl.play();
+    }
+  },
+
+  stop() {
+    this.stopSynth();
+    if (this.audioEl) {
+      this.audioEl.pause();
+      this.audioEl.src = '';
+    }
+  },
+
+  seek(seconds, duration) {
+    this.resumeContext();
+    if (this.isSynthPlaying) {
+      this.synthVirtualTime = Math.max(0, Math.min(seconds, duration));
+      // recalculate step based on tempo and current virtual time
+      const beats = (this.synthVirtualTime / 60) * this.synthTempo;
+      this.synthStep = Math.floor(beats * 4); // 4 steps per beat
+      this.nextNoteTime = this.ctx.currentTime;
+      if (this.onTimeUpdateCallback) {
+        this.onTimeUpdateCallback(this.synthVirtualTime, duration);
+      }
+    } else if (this.audioEl) {
+      this.audioEl.currentTime = seconds;
+    }
+  },
+
