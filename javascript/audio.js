@@ -105,3 +105,30 @@ export const AudioEngine = {
     this.init();
     this.resumeContext();
     this.stopSynth();
+
+    const objectUrl = URL.createObjectURL(blob);
+    this.audioEl.src = objectUrl;
+    this.audioEl.currentTime = seekTime;
+    
+    const playPromise = this.audioEl.play();
+    if (playPromise !== undefined) {
+      playPromise.catch((err) => console.warn("Audio play interrupted:", err));
+    }
+  },
+
+  pause() {
+    this.resumeContext();
+    if (this.isSynthPlaying) {
+      this.isSynthPlaying = false;
+      clearTimeout(this.synthTimerId);
+    } else if (this.audioEl) {
+      this.audioEl.pause();
+    }
+  },
+
+  resume() {
+    this.resumeContext();
+    if (this.synthTrackId && !this.isSynthPlaying) {
+      this.playSynthTrack(this.synthTrackId, this.synthVirtualTime);
+    } else if (this.audioEl) {
+      this.audioEl.play();
