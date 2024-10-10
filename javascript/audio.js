@@ -213,3 +213,30 @@ export const AudioEngine = {
   // --- PROCEDURAL SYNTH ENGINE ---
 
   getSynthBaseTempo() {
+    if (typeof this.synthTrackId === 'string' && this.synthTrackId.startsWith('bolly-')) {
+      const num = parseInt(this.synthTrackId.split('-')[1]) || 1;
+      const style = num % 3;
+      if (style === 0) return 80;  // Romantic
+      if (style === 1) return 115; // Dance
+      return 125;                  // Upbeat
+    }
+    if (this.synthTrackId === 'synth-1') return 128; // Chiptune
+    if (this.synthTrackId === 'synth-2') return 75;  // Lofi
+    if (this.synthTrackId === 'synth-3') return 110; // Synthwave
+    return 100;
+  },
+
+  getSynthDuration() {
+    if (typeof this.synthTrackId === 'string' && this.synthTrackId.startsWith('bolly-')) {
+      return this.synthDuration || 180;
+    }
+    if (this.synthTrackId === 'synth-1') return 90;
+    if (this.synthTrackId === 'synth-2') return 120;
+    if (this.synthTrackId === 'synth-3') return 100;
+    return 90;
+  },
+
+  playSynthTrack(id, seekTime = 0, duration = 120) {
+    this.init();
+    this.resumeContext();
+    this.stopSynth();
