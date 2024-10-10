@@ -186,3 +186,30 @@ export const AudioEngine = {
     this.init();
     if (this.pannerNode) {
       this.pannerNode.pan.setValueAtTime(pan, this.ctx.currentTime);
+    }
+  },
+
+  setEqualizerBand(index, gainValue) {
+    this.init();
+    if (this.eqFilters[index]) {
+      this.eqFilters[index].gain.setValueAtTime(gainValue, this.ctx.currentTime);
+    }
+  },
+
+  getFrequencyData() {
+    if (!this.analyserNode) return new Uint8Array(0);
+    const dataArray = new Uint8Array(this.analyserNode.frequencyBinCount);
+    this.analyserNode.getByteFrequencyData(dataArray);
+    return dataArray;
+  },
+
+  getWaveformData() {
+    if (!this.analyserNode) return new Uint8Array(0);
+    const dataArray = new Uint8Array(this.analyserNode.frequencyBinCount);
+    this.analyserNode.getByteTimeDomainData(dataArray);
+    return dataArray;
+  },
+
+  // --- PROCEDURAL SYNTH ENGINE ---
+
+  getSynthBaseTempo() {
