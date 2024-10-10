@@ -294,3 +294,30 @@ export const AudioEngine = {
   advanceStep() {
     const secondsPerBeat = 60.0 / this.synthTempo;
     const secondsPerStep = 0.25 * secondsPerBeat; // 16th note steps
+    this.nextNoteTime += secondsPerStep;
+    this.synthStep++;
+  },
+
+  scheduleNote(step, time) {
+    const track = this.synthTrackId;
+    if (track === 'synth-1') {
+      this.scheduleChiptuneStep(step, time);
+    } else if (track === 'synth-2') {
+      this.scheduleLofiStep(step, time);
+    } else if (track === 'synth-3') {
+      this.scheduleSynthwaveStep(step, time);
+    } else if (typeof track === 'string' && track.startsWith('bolly-')) {
+      this.scheduleBollywoodStep(track, step, time);
+    }
+  },
+
+  scheduleBollywoodStep(trackId, step, time) {
+    const num = parseInt(trackId.split('-')[1]) || 1;
+    const style = num % 3;
+
+    if (style === 0) {
+      // Soft Lofi / Romantic style
+      this.scheduleLofiStep(step, time);
+    } else if (style === 1) {
+      // Synthwave / Dance style
+      this.scheduleSynthwaveStep(step, time);
