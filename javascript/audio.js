@@ -240,3 +240,30 @@ export const AudioEngine = {
     this.init();
     this.resumeContext();
     this.stopSynth();
+
+    this.isSynthPlaying = true;
+    this.synthTrackId = id;
+    this.synthDuration = duration;
+    this.synthVirtualTime = seekTime;
+    this.synthTempo = this.getSynthBaseTempo();
+    if (this.audioEl) {
+      this.synthTempo *= this.audioEl.playbackRate;
+    }
+
+    const beats = (this.synthVirtualTime / 60) * this.synthTempo;
+    this.synthStep = Math.floor(beats * 4); // 4 steps per beat (16th notes)
+    this.nextNoteTime = this.ctx.currentTime;
+    this.synthStartTime = this.ctx.currentTime - this.synthVirtualTime;
+
+    this.scheduler();
+  },
+
+  stopSynth() {
+    this.isSynthPlaying = false;
+    this.synthTrackId = null;
+    clearTimeout(this.synthTimerId);
+  },
+
+  scheduler() {
+    if (!this.isSynthPlaying) return;
+
