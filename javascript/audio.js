@@ -267,3 +267,30 @@ export const AudioEngine = {
   scheduler() {
     if (!this.isSynthPlaying) return;
 
+    while (this.nextNoteTime < this.ctx.currentTime + this.scheduleAheadTime) {
+      this.scheduleNote(this.synthStep, this.nextNoteTime);
+      this.advanceStep();
+    }
+
+    // Update virtual time for progress reporting
+    const elapsed = this.ctx.currentTime - this.synthStartTime;
+    const dur = this.getSynthDuration();
+    if (elapsed >= dur) {
+      this.stopSynth();
+      if (this.onTrackEndedCallback) {
+        this.onTrackEndedCallback();
+      }
+      return;
+    }
+
+    this.synthVirtualTime = elapsed;
+    if (this.onTimeUpdateCallback) {
+      this.onTimeUpdateCallback(this.synthVirtualTime, dur);
+    }
+
+    this.synthTimerId = setTimeout(() => this.scheduler(), this.lookahead);
+  },
+
+  advanceStep() {
+    const secondsPerBeat = 60.0 / this.synthTempo;
+    const secondsPerStep = 0.25 * secondsPerBeat; // 16th note steps
