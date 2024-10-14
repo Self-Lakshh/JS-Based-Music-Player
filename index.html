@@ -271,3 +271,20 @@
         </div>
 
         <!-- TAB: VISUALIZER PANE -->
+        <div id="pane-visualizers" class="tab-pane d-none">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <h2 class="font-gilroy-bold text-white mb-1">Ambient Visualizer</h2>
+              <p class="text-white-50 small">Canvas-rendered visual wave structures mapped to real-time audio amplitudes.</p>
+            </div>
+            <!-- Mode selectors -->
+            <div class="btn-group glass-card p-1">
+              <button class="btn btn-sm btn-dark rounded-pill px-3 viz-btn active" data-viz="bars">Bars</button>
+              <button class="btn btn-sm btn-dark rounded-pill px-3 viz-btn" data-viz="wave">Wave</button>
+              <button class="btn btn-sm btn-dark rounded-pill px-3 viz-btn" data-viz="circle">Circular</button>
+            </div>
+          </div>
+
+          <div class="visualizer-canvas-container">
+            <div class="visualizer-glow"></div>
+            <canvas id="visualizer-canvas"></canvas>
