@@ -219,3 +219,20 @@
             <div class="position-relative z-2">
               <span class="text-white-50 text-uppercase small font-gilroy-bold">Artist</span>
               <h1 id="artist-detail-name" class="font-gilroy-bold mt-1 mb-2">Artist Name</h1>
+              <p id="artist-detail-bio" class="text-white-50 small mb-0">Artist description</p>
+            </div>
+            <div class="artist-banner-glow" style="position: absolute; right: -50px; bottom: -50px; width: 300px; height: 300px; background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%); opacity: 0.4;"></div>
+          </div>
+
+          <h3 class="font-gilroy-bold text-white mb-4">Popular Tracks</h3>
+          <div class="table-responsive">
+            <table class="table custom-table">
+              <thead>
+                <tr>
+                  <th scope="col" class="width-row-num">#</th>
+                  <th scope="col">Title</th>
+                  <th scope="col">Album</th>
+                  <th scope="col">Duration</th>
+                </tr>
+              </thead>
+              <tbody id="artist-songs-table-body">
