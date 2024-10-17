@@ -446,3 +446,33 @@ body {
   display: flex;
   align-items: center;
 }
+
+.player-album-art {
+  width: 56px;
+  height: 56px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(0,0,0,0.3);
+  flex-shrink: 0;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+
+.player-album-art img, .player-cover-gradient {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.1s ease-out; /* For beat reaction scaler */
+}
+
+.player-favorite-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.player-favorite-btn:hover {
+  transform: scale(1.2);
+  color: #ef4444;
