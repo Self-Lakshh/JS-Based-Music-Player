@@ -476,3 +476,33 @@ body {
 .player-favorite-btn:hover {
   transform: scale(1.2);
   color: #ef4444;
+}
+
+.player-favorite-btn.active {
+  color: #ef4444;
+}
+
+.player-playback-controls {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.player-buttons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.player-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.player-btn:hover {
