@@ -596,3 +596,33 @@ body {
   align-items: center;
   gap: 8px;
   width: 100px;
+}
+
+/* --- IMMERSIVE VIEWS: FULLSCREEN LYRICS & QUEUE --- */
+
+#pane-lyrics-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 86px); /* Player bar height offset */
+  background: var(--bg-gradient);
+  z-index: 95;
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  overflow: hidden;
+  backdrop-filter: blur(25px);
+}
+
+.fullscreen-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.lyrics-container-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 100px 0;
