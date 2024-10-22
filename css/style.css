@@ -686,3 +686,32 @@ body {
   background-size: 100% 100% !important;
 }
 
+.lyrics-empty {
+  font-size: 1.5rem;
+  color: var(--text-muted);
+}
+
+/* Queue Drawer */
+.queue-drawer {
+  position: fixed;
+  top: 0;
+  right: -320px;
+  width: 320px;
+  height: calc(100vh - 86px);
+  background: var(--player-bar-bg);
+  border-left: 1px solid var(--surface-border);
+  box-shadow: -8px 0 30px rgba(0,0,0,0.5);
+  backdrop-filter: blur(25px);
+  z-index: 90;
+  transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.queue-drawer.open {
+  right: 0;
+}
+
+.queue-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--surface-border);
