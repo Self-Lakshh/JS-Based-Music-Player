@@ -715,3 +715,33 @@ body {
 .queue-header {
   padding: 20px;
   border-bottom: 1px solid var(--surface-border);
+}
+
+.queue-list-container {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.queue-item {
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.queue-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.queue-item.active {
+  border-left: 4px solid var(--accent-color);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.queue-item.active .text-white {
+  color: var(--accent-color) !important;
+}
+
+.x-small {
+  font-size: 0.75rem;
+}
+
