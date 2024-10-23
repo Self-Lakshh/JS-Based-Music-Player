@@ -272,3 +272,28 @@ export const Database = {
       this.savePlaylists(playlists);
     }
     return this.isFavorite(trackId);
+  },
+
+  // --- HISTORY ---
+  getHistory() {
+    return JSON.parse(localStorage.getItem('beatstream_history')) || [];
+  },
+
+  addHistory(trackId) {
+    let history = this.getHistory();
+    // Remove if already exists to move to top
+    history = history.filter(item => String(item.trackId) !== String(trackId));
+    history.unshift({ trackId, playedAt: Date.now() });
+    
+    // Limit to last 50 plays
+    if (history.length > 50) {
+      history.pop();
+    }
+    localStorage.setItem('beatstream_history', JSON.stringify(history));
+  },
+
+  // --- PLAYLISTS ---
+  getPlaylists() {
+    return JSON.parse(localStorage.getItem('beatstream_playlists')) || [];
+  },
+
