@@ -297,3 +297,28 @@ export const Database = {
     return JSON.parse(localStorage.getItem('beatstream_playlists')) || [];
   },
 
+  savePlaylists(playlists) {
+    localStorage.setItem('beatstream_playlists', JSON.stringify(playlists));
+  },
+
+  createPlaylist(name, description, coverGradient = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)') {
+    const playlists = this.getPlaylists();
+    const newPlaylist = {
+      id: 'pl-' + Date.now(),
+      name,
+      description,
+      coverGradient,
+      tracks: []
+    };
+    playlists.push(newPlaylist);
+    this.savePlaylists(playlists);
+    return newPlaylist;
+  },
+
+  deletePlaylist(playlistId) {
+    let playlists = this.getPlaylists();
+    playlists = playlists.filter(p => p.id !== playlistId || p.isSystem);
+    this.savePlaylists(playlists);
+  },
+
+  addTrackToPlaylist(playlistId, trackId) {
