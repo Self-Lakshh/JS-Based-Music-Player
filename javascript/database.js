@@ -247,3 +247,28 @@ export const Database = {
   getFavorites() {
     return JSON.parse(localStorage.getItem('beatstream_favorites')) || [];
   },
+
+  isFavorite(trackId) {
+    const cleanId = typeof trackId === 'number' ? trackId : trackId;
+    return this.getFavorites().map(String).includes(String(cleanId));
+  },
+
+  toggleFavorite(trackId) {
+    let favorites = this.getFavorites();
+    const cleanId = String(trackId);
+    const favsStr = favorites.map(String);
+    if (favsStr.includes(cleanId)) {
+      favorites = favorites.filter(id => String(id) !== cleanId);
+    } else {
+      favorites.push(typeof trackId === 'number' ? trackId : cleanId);
+    }
+    localStorage.setItem('beatstream_favorites', JSON.stringify(favorites));
+    
+    // Also sync the "My Favorites" system playlist
+    let playlists = this.getPlaylists();
+    const favPlaylist = playlists.find(p => p.id === 'favorites');
+    if (favPlaylist) {
+      favPlaylist.tracks = favorites;
+      this.savePlaylists(playlists);
+    }
+    return this.isFavorite(trackId);
