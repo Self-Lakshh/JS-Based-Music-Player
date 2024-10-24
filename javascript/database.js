@@ -372,3 +372,28 @@ export const Database = {
         plays: 0
       };
 
+      const request = store.add(track);
+
+      request.onsuccess = (event) => {
+        const id = event.target.result;
+        resolve({ id, ...track });
+      };
+
+      request.onerror = (event) => {
+        reject(event.target.error);
+      };
+    });
+  },
+
+  async deleteTrackFromDB(id) {
+    return new Promise((resolve, reject) => {
+      const transaction = this.db.transaction([TRACK_STORE_NAME], 'readwrite');
+      const store = transaction.objectStore(TRACK_STORE_NAME);
+      const request = store.delete(id);
+
+      request.onsuccess = () => {
+        // Also remove from any playlists, queue, favorites
+        let favorites = this.getFavorites();
+        favorites = favorites.filter(fid => String(fid) !== String(id));
+        localStorage.setItem('beatstream_favorites', JSON.stringify(favorites));
+        
