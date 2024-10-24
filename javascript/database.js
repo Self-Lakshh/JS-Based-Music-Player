@@ -322,3 +322,28 @@ export const Database = {
   },
 
   addTrackToPlaylist(playlistId, trackId) {
+    const playlists = this.getPlaylists();
+    const playlist = playlists.find(p => p.id === playlistId);
+    if (playlist && !playlist.tracks.map(String).includes(String(trackId))) {
+      playlist.tracks.push(trackId);
+      this.savePlaylists(playlists);
+      return true;
+    }
+    return false;
+  },
+
+  removeTrackFromPlaylist(playlistId, trackId) {
+    const playlists = this.getPlaylists();
+    const playlist = playlists.find(p => p.id === playlistId);
+    if (playlist) {
+      playlist.tracks = playlist.tracks.filter(id => String(id) !== String(trackId));
+      this.savePlaylists(playlists);
+      return true;
+    }
+    return false;
+  },
+
+  reorderPlaylistTracks(playlistId, trackIds) {
+    const playlists = this.getPlaylists();
+    const playlist = playlists.find(p => p.id === playlistId);
+    if (playlist) {
