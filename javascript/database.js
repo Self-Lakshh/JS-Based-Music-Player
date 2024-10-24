@@ -347,3 +347,28 @@ export const Database = {
     const playlists = this.getPlaylists();
     const playlist = playlists.find(p => p.id === playlistId);
     if (playlist) {
+      playlist.tracks = trackIds;
+      this.savePlaylists(playlists);
+      return true;
+    }
+    return false;
+  },
+
+  // --- INDEXEDDB TRACK STORAGE ---
+  async saveTrack(audioFile, metadata = {}) {
+    return new Promise((resolve, reject) => {
+      const transaction = this.db.transaction([TRACK_STORE_NAME], 'readwrite');
+      const store = transaction.objectStore(TRACK_STORE_NAME);
+
+      const track = {
+        title: metadata.title || audioFile.name.replace(/\.[^/.]+$/, ""),
+        artist: metadata.artist || 'Unknown Artist',
+        album: metadata.album || 'Single',
+        genre: metadata.genre || 'Unknown',
+        duration: metadata.duration || 0,
+        audioBlob: audioFile,
+        coverBlob: metadata.coverBlob || null,
+        addedAt: Date.now(),
+        plays: 0
+      };
+
