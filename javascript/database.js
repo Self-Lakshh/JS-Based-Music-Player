@@ -397,3 +397,28 @@ export const Database = {
         favorites = favorites.filter(fid => String(fid) !== String(id));
         localStorage.setItem('beatstream_favorites', JSON.stringify(favorites));
         
+        let playlists = this.getPlaylists();
+        playlists.forEach(pl => {
+          pl.tracks = pl.tracks.filter(tid => String(tid) !== String(id));
+        });
+        this.savePlaylists(playlists);
+
+        let queue = this.getQueue();
+        queue = queue.filter(tid => String(tid) !== String(id));
+        this.saveQueue(queue);
+
+        resolve();
+      };
+
+      request.onerror = (event) => {
+        reject(event.target.error);
+      };
+    });
+  },
+
+  async getTrack(id) {
+    if (typeof id === 'string') {
+      if (id.startsWith('synth-')) {
+        if (id === 'synth-1') {
+          return {
+            id: 'synth-1',
