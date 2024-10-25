@@ -447,3 +447,28 @@ export const Database = {
             album: 'Retro Future',
             duration: 100,
             genre: 'Synthwave',
+            isProcedural: true
+          };
+        }
+      } else if (id.startsWith('bolly-')) {
+        const seed = BOLLYWOOD_SEEDS.find(t => t.id === id);
+        if (seed) return seed;
+      }
+    }
+
+    // Otherwise, load from IndexedDB
+    return new Promise((resolve, reject) => {
+      const numericId = typeof id === 'string' && !isNaN(id) ? parseInt(id, 10) : id;
+      if (this.db === null) {
+        reject(new Error('Database not initialized'));
+        return;
+      }
+      const transaction = this.db.transaction([TRACK_STORE_NAME], 'readonly');
+      const store = transaction.objectStore(TRACK_STORE_NAME);
+      const request = store.get(numericId);
+
+      request.onsuccess = (event) => {
+        resolve(event.target.result);
+      };
+
+      request.onerror = (event) => {
