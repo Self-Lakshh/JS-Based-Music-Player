@@ -422,3 +422,28 @@ export const Database = {
         if (id === 'synth-1') {
           return {
             id: 'synth-1',
+            title: 'Chiptune Odyssey',
+            artist: 'Procedural Synth Engine',
+            album: 'Synthesized Dreams',
+            duration: 90,
+            genre: '8-Bit Retro',
+            isProcedural: true
+          };
+        } else if (id === 'synth-2') {
+          return {
+            id: 'synth-2',
+            title: 'Midnight Breeze',
+            artist: 'Procedural Synth Engine',
+            album: 'Ambient Waves',
+            duration: 120,
+            genre: 'Ambient Lofi',
+            isProcedural: true
+          };
+        } else if (id === 'synth-3') {
+          return {
+            id: 'synth-3',
+            title: 'Neon Horizon',
+            artist: 'Procedural Synth Engine',
+            album: 'Retro Future',
+            duration: 100,
+            genre: 'Synthwave',
