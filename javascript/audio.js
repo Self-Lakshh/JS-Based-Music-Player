@@ -347,3 +347,30 @@ export const AudioEngine = {
 
     const bassPattern = [
       110, 110, 130, 110, 146, 146, 165, 110,
+      110, 110, 130, 110, 165, 165, 146, 130
+    ];
+
+    // Trigger Lead Note
+    const freq = melodyPattern[localStep];
+    if (freq > 0 && Math.random() > 0.1) {
+      this.createSynthVoice(freq, 'square', 0.05, 0.12, 0.08, time);
+      // Echo voice
+      if (Math.random() > 0.5) {
+        this.createSynthVoice(freq, 'sine', 0.02, 0.05, 0.2, time + 0.15);
+      }
+    }
+
+    // Trigger Bass Note
+    const bassFreq = bassPattern[localStep];
+    if (step % 2 === 0) {
+      this.createSynthVoice(bassFreq, 'triangle', 0.15, 0.01, 0.2, time);
+    }
+
+    // Sound FX (Noise Snare / Kick)
+    if (localStep === 4 || localStep === 12) {
+      // Noise snare
+      this.createNoiseSnare(time);
+    } else if (localStep === 0 || localStep === 8 || localStep === 10) {
+      // Kick drum
+      this.createSynthKick(120, time);
+    } else if (step % 2 === 1) {
