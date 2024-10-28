@@ -472,3 +472,28 @@ export const Database = {
       };
 
       request.onerror = (event) => {
+        reject(event.target.error);
+      };
+    });
+  },
+
+  async getAllTracksFromDB() {
+    return new Promise((resolve, reject) => {
+      if (this.db === null) {
+        resolve([]);
+        return;
+      }
+      const transaction = this.db.transaction([TRACK_STORE_NAME], 'readonly');
+      const store = transaction.objectStore(TRACK_STORE_NAME);
+      const request = store.getAll();
+
+      request.onsuccess = (event) => {
+        resolve(event.target.result || []);
+      };
+
+      request.onerror = (event) => {
+        reject(event.target.error);
+      };
+    });
+  }
+};
