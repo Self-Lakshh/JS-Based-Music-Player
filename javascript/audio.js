@@ -321,3 +321,29 @@ export const AudioEngine = {
     } else if (style === 1) {
       // Synthwave / Dance style
       this.scheduleSynthwaveStep(step, time);
+    } else {
+      // Chiptune / Upbeat style
+      this.scheduleChiptuneStep(step, time);
+    }
+  },
+
+  // --- SYNTH 1: CHIPTUNE ODYSSEY (Square / Tri, Upbeat 8-Bit) ---
+  scheduleChiptuneStep(step, time) {
+    // 16-step cycles
+    const localStep = step % 16;
+    
+    // Notes in A Minor Pentatonic: A3(220), C4(261.63), D4(293.66), E4(329.63), G4(392), A4(440)
+    let melodyPattern = [
+      440, 0, 392, 329, 293, 329, 0, 440,
+      440, 523, 440, 392, 329, 293, 261, 220
+    ];
+
+    if (this.synthTrackId === 'bolly-10') { // Kabira
+      melodyPattern = [
+        293, 329, 293, 261, 293, 329, 293, 261,
+        293, 329, 392, 329, 293, 261, 220, 0
+      ];
+    }
+
+    const bassPattern = [
+      110, 110, 130, 110, 146, 146, 165, 110,
