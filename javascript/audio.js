@@ -374,3 +374,30 @@ export const AudioEngine = {
       // Kick drum
       this.createSynthKick(120, time);
     } else if (step % 2 === 1) {
+      // Closed Hi-hat
+      this.createNoiseHihat(time);
+    }
+  },
+
+  // --- SYNTH 2: MIDNIGHT BREEZE (Sine, Soft Ambient Lofi Chords) ---
+  scheduleLofiStep(step, time) {
+    const localStep = step % 32;
+
+    // Soft jazzy chords: Fmaj7 -> Cmaj7 -> G7 -> Am
+    // Root frequencies: F2(87.31), C2(65.41), G2(98.00), A2(110.00)
+    // Play chords on step 0, 8, 16, 24
+    if (localStep === 0) {
+      // Fmaj7: F3(174.61), A3(220.00), C4(261.63), E4(329.63)
+      this.createPadChord([174.61, 220.00, 261.63, 329.63], time);
+    } else if (localStep === 8) {
+      // Cmaj7: C3(130.81), E3(164.81), G3(196.00), B3(246.94)
+      this.createPadChord([130.81, 164.81, 196.00, 246.94], time);
+    } else if (localStep === 16) {
+      // G7: G2(98.00), D3(146.83), F3(174.61), B3(246.94)
+      this.createPadChord([98.00, 146.83, 174.61, 246.94], time);
+    } else if (localStep === 24) {
+      // Am7: A2(110.00), E3(164.81), G3(196.00), C4(261.63)
+      this.createPadChord([110.00, 164.81, 196.00, 261.63], time);
+    }
+
+    // Soft sparse melody notes
