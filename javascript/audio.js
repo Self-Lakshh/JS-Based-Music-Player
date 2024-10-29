@@ -401,3 +401,30 @@ export const AudioEngine = {
     }
 
     // Soft sparse melody notes
+    let melodyPattern = [
+      0, 0, 440, 0, 392, 0, 0, 329,
+      0, 523, 0, 440, 0, 0, 392, 0,
+      0, 0, 293, 0, 329, 0, 0, 261,
+      0, 329, 0, 392, 0, 0, 440, 0
+    ];
+
+    if (this.synthTrackId === 'bolly-1') { // Saiyara
+      melodyPattern = [
+        329, 0, 329, 0, 392, 0, 329, 0,
+        293, 0, 261, 0, 293, 0, 329, 0,
+        329, 0, 392, 0, 329, 0, 293, 0,
+        261, 0, 220, 0, 220, 0, 0, 0
+      ];
+    } else if (this.synthTrackId === 'bolly-5') { // Tum Hi Ho
+      melodyPattern = [
+        220, 0, 261, 0, 293, 0, 329, 0,
+        293, 0, 261, 0, 246, 0, 220, 0,
+        246, 0, 261, 0, 220, 0, 207, 0,
+        220, 0, 0, 0, 0, 0, 0, 0
+      ];
+    }
+
+    const mFreq = melodyPattern[localStep];
+    if (mFreq > 0 && Math.random() > 0.3) {
+      // sine voice with slow attack
+      this.createSynthVoice(mFreq, 'sine', 0.1, 0.3, 0.4, time);
