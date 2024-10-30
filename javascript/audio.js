@@ -428,3 +428,30 @@ export const AudioEngine = {
     if (mFreq > 0 && Math.random() > 0.3) {
       // sine voice with slow attack
       this.createSynthVoice(mFreq, 'sine', 0.1, 0.3, 0.4, time);
+    }
+
+    // Soft beats: Kick on 0, 12, 16, 28; Snare on 8, 24
+    if (localStep === 0 || localStep === 12 || localStep === 16 || localStep === 28) {
+      this.createSynthKick(80, time);
+    } else if (localStep === 8 || localStep === 24) {
+      this.createLofiSnare(time);
+    } else if (step % 4 === 2) {
+      this.createNoiseHihat(time, 0.015);
+    }
+  },
+
+  // --- SYNTH 3: NEON HORIZON (Saw, Punchy 80s Synthwave) ---
+  scheduleSynthwaveStep(step, time) {
+    const localStep = step % 16;
+
+    // Chord progression Am -> F -> C -> G
+    // Frequencies: A(440), F(349.23), C(261.63), G(392.00)
+    // 8th note bassline pumping: steady octave leaps
+    const bassNotes = [
+      110, 110, 220, 110, 110, 110, 220, 110, // A
+      87.3, 87.3, 174.6, 87.3, 87.3, 87.3, 174.6, 87.3  // F
+    ];
+    
+    // Choose correct bass based on cycle
+    const isFirstBar = Math.floor(step / 16) % 4 < 2;
+    const rootBass = isFirstBar ? bassNotes[step % 8] : bassNotes[(step % 8) + 8];
