@@ -509,3 +509,30 @@ export const AudioEngine = {
     osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.3);
 
     kickGain.gain.setValueAtTime(0.4, time);
+    kickGain.gain.exponentialRampToValueAtTime(0.001, time + 0.3);
+
+    osc.connect(kickGain);
+    kickGain.connect(this.gainNode);
+
+    osc.start(time);
+    osc.stop(time + 0.35);
+  },
+
+  createNoiseSnare(time) {
+    const bufferSize = this.ctx.sampleRate * 0.15; // 150ms
+    const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+
+    const noise = this.ctx.createBufferSource();
+    noise.buffer = buffer;
+
+    const noiseFilter = this.ctx.createBiquadFilter();
+    noiseFilter.type = 'bandpass';
+    noiseFilter.frequency.value = 1000;
+
+    const noiseGain = this.ctx.createGain();
+    noiseGain.gain.setValueAtTime(0.2, time);
+    noiseGain.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
