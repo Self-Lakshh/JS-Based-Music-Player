@@ -455,3 +455,30 @@ export const AudioEngine = {
     // Choose correct bass based on cycle
     const isFirstBar = Math.floor(step / 16) % 4 < 2;
     const rootBass = isFirstBar ? bassNotes[step % 8] : bassNotes[(step % 8) + 8];
+    if (step % 2 === 0) {
+      // pumping synthwave bass (sawtooth + lowpass filter)
+      this.createSynthwaveBass(rootBass, time);
+    }
+
+    // Pluck melody notes
+    // Arpeggiator pattern
+    const arp1 = [440, 523, 659, 784, 880, 784, 659, 523];
+    const arp2 = [349.2, 523, 698.5, 880, 698.5, 523, 349.2, 523];
+    const activeArp = isFirstBar ? arp1 : arp2;
+
+    if (step % 2 === 1 && Math.random() > 0.1) {
+      const melodyFreq = activeArp[step % 8];
+      this.createSynthVoice(melodyFreq, 'sawtooth', 0.01, 0.05, 0.15, time, 0.05);
+    }
+
+    // Heavy Retro Drums: Kick on 0, 8, 10, 14; Snare on 4, 12
+    if (localStep === 0 || localStep === 8 || localStep === 10 || localStep === 14) {
+      this.createSynthKick(150, time);
+    } else if (localStep === 4 || localStep === 12) {
+      this.createRetroSnare(time);
+    } else if (step % 2 === 1) {
+      this.createNoiseHihat(time, 0.03);
+    }
+  },
+
+  // --- SYNTH VOICE GENERATORS ---
