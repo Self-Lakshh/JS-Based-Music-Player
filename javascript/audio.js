@@ -590,3 +590,30 @@ export const AudioEngine = {
       osc.connect(chordGain);
       chordGain.connect(this.gainNode);
 
+      osc.start(time);
+      osc.stop(time + 2.1);
+    });
+  },
+
+  createLofiSnare(time) {
+    // Soft snare: filter oscillator + quiet noise
+    const osc = this.ctx.createOscillator();
+    const oscGain = this.ctx.createGain();
+    osc.frequency.setValueAtTime(180, time);
+    oscGain.gain.setValueAtTime(0.12, time);
+    oscGain.gain.exponentialRampToValueAtTime(0.001, time + 0.1);
+    osc.connect(oscGain);
+    oscGain.connect(this.gainNode);
+    osc.start(time);
+    osc.stop(time + 0.11);
+
+    this.createNoiseHihat(time, 0.015);
+  },
+
+  createSynthwaveBass(frequency, time) {
+    const osc = this.ctx.createOscillator();
+    const filter = this.ctx.createBiquadFilter();
+    const bassGain = this.ctx.createGain();
+
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(frequency, time);
