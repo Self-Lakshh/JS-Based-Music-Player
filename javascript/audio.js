@@ -563,3 +563,30 @@ export const AudioEngine = {
     const noiseGain = this.ctx.createGain();
     noiseGain.gain.setValueAtTime(level, time);
     noiseGain.gain.exponentialRampToValueAtTime(0.001, time + 0.04);
+
+    noise.connect(noiseFilter);
+    noiseFilter.connect(noiseGain);
+    noiseGain.connect(this.gainNode);
+
+    noise.start(time);
+    noise.stop(time + 0.05);
+  },
+
+  createPadChord(freqs, time) {
+    freqs.forEach((freq) => {
+      const osc = this.ctx.createOscillator();
+      const chordGain = this.ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, time);
+
+      chordGain.gain.setValueAtTime(0, time);
+      // Slow attack (300ms)
+      chordGain.gain.linearRampToValueAtTime(0.04, time + 0.3);
+      // Slow decay / release (1.5s)
+      chordGain.gain.setValueAtTime(0.04, time + 1.2);
+      chordGain.gain.exponentialRampToValueAtTime(0.001, time + 2.0);
+
+      osc.connect(chordGain);
+      chordGain.connect(this.gainNode);
+
