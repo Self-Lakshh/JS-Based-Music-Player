@@ -482,3 +482,30 @@ export const AudioEngine = {
   },
 
   // --- SYNTH VOICE GENERATORS ---
+
+  createSynthVoice(frequency, type, attack, decay, release, time, gainLevel = 0.08) {
+    const osc = this.ctx.createOscillator();
+    const voiceGain = this.ctx.createGain();
+
+    osc.type = type;
+    osc.frequency.setValueAtTime(frequency, time);
+
+    voiceGain.gain.setValueAtTime(0, time);
+    voiceGain.gain.linearRampToValueAtTime(gainLevel, time + attack);
+    voiceGain.gain.exponentialRampToValueAtTime(0.001, time + attack + decay + release);
+
+    osc.connect(voiceGain);
+    voiceGain.connect(this.gainNode);
+
+    osc.start(time);
+    osc.stop(time + attack + decay + release + 0.1);
+  },
+
+  createSynthKick(startFreq, time) {
+    const osc = this.ctx.createOscillator();
+    const kickGain = this.ctx.createGain();
+
+    osc.frequency.setValueAtTime(startFreq, time);
+    osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.3);
+
+    kickGain.gain.setValueAtTime(0.4, time);
