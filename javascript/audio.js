@@ -617,3 +617,30 @@ export const AudioEngine = {
 
     osc.type = 'sawtooth';
     osc.frequency.setValueAtTime(frequency, time);
+
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(400, time);
+    filter.frequency.exponentialRampToValueAtTime(120, time + 0.15);
+
+    bassGain.gain.setValueAtTime(0.15, time);
+    bassGain.gain.exponentialRampToValueAtTime(0.001, time + 0.2);
+
+    osc.connect(filter);
+    filter.connect(bassGain);
+    bassGain.connect(this.gainNode);
+
+    osc.start(time);
+    osc.stop(time + 0.22);
+  },
+
+  createRetroSnare(time) {
+    // Snare punch: oscillator sweep
+    const osc = this.ctx.createOscillator();
+    const oscGain = this.ctx.createGain();
+    osc.frequency.setValueAtTime(250, time);
+    osc.frequency.exponentialRampToValueAtTime(100, time + 0.15);
+    oscGain.gain.setValueAtTime(0.18, time);
+    oscGain.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
+    osc.connect(oscGain);
+    oscGain.connect(this.gainNode);
+    osc.start(time);
