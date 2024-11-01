@@ -373,3 +373,20 @@
                 <p class="text-white-50 small">Swap dynamic backdrops and glowing interfaces instantly.</p>
                 <div class="theme-selector">
                   <button class="theme-btn active" data-theme="midnight-blue">Midnight Blue</button>
+                  <button class="theme-btn" data-theme="aurora-purple">Aurora Purple</button>
+                  <button class="theme-btn" data-theme="deep-graphite">Deep Graphite</button>
+                  <button class="theme-btn" data-theme="neon-violet">Neon Violet</button>
+                  <button class="theme-btn" data-theme="warm-ivory">Warm Ivory</button>
+                </div>
+              </div>
+
+              <!-- Database backup -->
+              <div class="glass-card p-4">
+                <h4 class="font-gilroy-bold text-white mb-3">Backup & System</h4>
+                <p class="text-white-50 small">Export your settings, favorite lists, and playlists as JSON file templates to migrate configurations.</p>
+                <div class="d-flex gap-2">
+                  <button id="settings-backup-btn" class="btn btn-outline-light btn-sm px-3 py-2">📥 Export Settings</button>
+                  <label for="settings-restore-btn" class="btn btn-outline-info btn-sm px-3 py-2 cursor-pointer mb-0">
+                    📤 Import Settings
+                  </label>
+                  <input type="file" id="settings-restore-btn" accept=".json" class="d-none" />
