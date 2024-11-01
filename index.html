@@ -441,3 +441,20 @@
 
       <!-- Playback buttons and progress bar (Center) -->
       <div class="player-playback-controls">
+        <div class="player-buttons">
+          <button id="player-shuffle-btn" class="player-btn" title="Shuffle">🔀</button>
+          <button id="player-prev-btn" class="player-btn" title="Previous">⏮</button>
+          <button id="player-play-btn" class="play-btn-circle" title="Play">▶</button>
+          <button id="player-next-btn" class="player-btn" title="Next">⏭</button>
+          <button id="player-repeat-btn" class="player-btn" title="Repeat All">🔁</button>
+        </div>
+
+        <div class="player-timeline">
+          <span id="player-time-current" class="timeline-time">0:00</span>
+          <input id="player-progress-bar" type="range" class="slider-input" min="0" max="100" value="0" />
+          <span id="player-time-total" class="timeline-time">0:00</span>
+        </div>
+      </div>
+
+      <!-- Sound controls and utility drawer toggles (Right) -->
+      <div class="player-sound-controls">
