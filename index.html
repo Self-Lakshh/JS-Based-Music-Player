@@ -458,3 +458,20 @@
 
       <!-- Sound controls and utility drawer toggles (Right) -->
       <div class="player-sound-controls">
+        <button id="player-mute-btn" class="player-btn" title="Mute/Unmute">🔊</button>
+        <div class="volume-container">
+          <input id="volume-slider" type="range" class="slider-input" min="0" max="100" value="80" />
+        </div>
+        <button id="player-lyrics-toggle-btn" class="player-btn ms-2" title="Lyrics Mode">🎤</button>
+        <button id="player-queue-toggle-btn" class="player-btn" title="Play Queue">📋</button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Create Playlist Modal -->
+  <div class="modal fade" id="createPlaylistModal" tabindex="-1" aria-labelledby="createPlaylistModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-white border-secondary">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title font-gilroy-bold" id="createPlaylistModalLabel">Create Custom Playlist</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
