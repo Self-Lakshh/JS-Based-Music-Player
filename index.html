@@ -424,3 +424,20 @@
       </aside>
     </div>
 
+    <!-- PERSISTENT bottom PLAYER BAR -->
+    <footer class="player-bar">
+      <!-- Track metadata info (Left) -->
+      <div class="player-track-info gap-3">
+        <div class="player-album-art">
+          <img id="player-cover-img" src="assets/orange_logo.png" alt="Cover" class="d-none" />
+          <div id="player-cover-gradient" class="player-cover-gradient" style="background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%)"></div>
+        </div>
+        <div class="text-truncate text-white">
+          <h5 id="player-track-title" class="font-gilroy-bold mb-1 text-truncate fs-6 text-capitalize">Chiptune Odyssey</h5>
+          <p id="player-track-artist" class="text-white-50 text-truncate small mb-0">Procedural Synth Engine</p>
+        </div>
+        <button id="player-favorite-btn" class="player-favorite-btn ms-2">♡</button>
+      </div>
+
+      <!-- Playback buttons and progress bar (Center) -->
+      <div class="player-playback-controls">
