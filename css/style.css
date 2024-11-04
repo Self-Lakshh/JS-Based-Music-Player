@@ -745,3 +745,33 @@ body {
   font-size: 0.75rem;
 }
 
+/* --- VISUALIZER PANE --- */
+
+.visualizer-canvas-container {
+  width: 100%;
+  height: 400px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 12px;
+  border: 1px solid var(--surface-border);
+  overflow: hidden;
+  position: relative;
+}
+
+.visualizer-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, var(--accent-glow) 0%, transparent 70%);
+  opacity: 0.15;
+  pointer-events: none;
+  transition: opacity 0.1s ease-out;
+}
+
+/* --- SETTINGS Equalizer CONTROLS --- */
+
+.eq-container {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
