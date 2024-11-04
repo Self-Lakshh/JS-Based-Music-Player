@@ -475,3 +475,20 @@
         <div class="modal-header border-secondary">
           <h5 class="modal-title font-gilroy-bold" id="createPlaylistModalLabel">Create Custom Playlist</h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="modal-playlist-name" class="form-label small text-white-50">Playlist Name</label>
+            <input type="text" class="form-control bg-dark border-secondary text-white" id="modal-playlist-name" placeholder="e.g. Chill Synthwave Beats" required />
+          </div>
+          <div class="mb-3">
+            <label for="modal-playlist-desc" class="form-label small text-white-50">Description (Optional)</label>
+            <textarea class="form-control bg-dark border-secondary text-white" id="modal-playlist-desc" rows="3" placeholder="Describe the mood of your collection..."></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="modal-playlist-gradient" class="form-label small text-white-50">Select Cover Aesthetic</label>
+            <select class="form-select bg-dark border-secondary text-white" id="modal-playlist-gradient">
+              <option value="linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)">Aurora Sunset (Purple/Pink)</option>
+              <option value="linear-gradient(135deg, #00f2fe 0%, #4facfe 100%)">Neon Ocean (Cyan/Blue)</option>
+              <option value="linear-gradient(135deg, #f97316 0%, #ff5e62 100%)">Sunset Flame (Orange/Red)</option>
+              <option value="linear-gradient(135deg, #10b981 0%, #059669 100%)">Emerald Forest (Green)</option>
