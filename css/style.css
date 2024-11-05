@@ -775,3 +775,33 @@ body {
   display: flex;
   justify-content: space-around;
   padding: 20px;
+  background: var(--surface-color);
+  border-radius: 12px;
+  border: 1px solid var(--surface-border);
+}
+
+.eq-band {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  height: 250px;
+}
+
+.eq-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 4px;
+  height: 160px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  writing-mode: bt-lr; /* IE */
+  -webkit-appearance: slider-vertical; /* Webkit */
+}
+
+.eq-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
