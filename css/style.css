@@ -805,3 +805,33 @@ body {
   -webkit-appearance: none;
   width: 16px;
   height: 16px;
+  border-radius: 50%;
+  background: var(--text-main);
+  cursor: pointer;
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+.eq-slider:hover::-webkit-slider-thumb {
+  background: var(--accent-color);
+}
+
+.theme-selector {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.theme-btn {
+  border: 1px solid var(--surface-border);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-main);
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.theme-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent-color);
