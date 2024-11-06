@@ -895,3 +895,33 @@ body {
 .detail-cover-box {
   width: 160px;
   height: 160px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.detail-cover-text {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 4rem;
+  color: #fff;
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* --- RESPONSIVENESS MEDIA BREAKPOINTS --- */
+
+@media (max-width: 1200px) {
+  .player-track-info {
+    width: 25%;
+  }
+  .player-playback-controls {
+    width: 50%;
+  }
+  .player-sound-controls {
+    width: 25%;
+  }
+}
+
+@media (max-width: 992px) {
