@@ -955,3 +955,33 @@ body {
     flex-direction: column-reverse; /* Navigation moves to bottom */
   }
   .sidebar {
+    width: 100%;
+    height: 60px;
+    border-right: none;
+    border-top: 1px solid var(--surface-border);
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 0 10px;
+    align-items: center;
+  }
+  .logo-section {
+    display: none;
+  }
+  .sidebar-nav-list {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 0;
+    width: 100%;
+    justify-content: space-around;
+  }
+  .sidebar-nav-item {
+    margin-bottom: 0;
+  }
+  .main-content {
+    padding: 1.5rem;
+  }
+  .player-sound-controls {
+    display: none; /* Hide volume controls on mobile */
+  }
+  .player-track-info {
+    width: 45%;
