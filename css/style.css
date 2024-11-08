@@ -985,3 +985,33 @@ body {
   }
   .player-track-info {
     width: 45%;
+  }
+  .player-playback-controls {
+    width: 55%;
+  }
+  .lyric-line {
+    font-size: 1.5rem;
+  }
+  .detail-banner {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+  .detail-cover-box {
+    margin: 0 auto;
+  }
+  .custom-table th:nth-child(3),
+  .custom-table td:nth-child(3) {
+    display: none; /* Hide Album column on mobile */
+  }
+}
+
+@media (max-width: 425px) {
+  .player-album-art {
+    width: 40px;
+    height: 40px;
+  }
+  .player-buttons {
+    gap: 10px;
+  }
+  .play-btn-circle {
