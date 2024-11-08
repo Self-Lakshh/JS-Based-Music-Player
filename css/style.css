@@ -1015,3 +1015,33 @@ body {
     gap: 10px;
   }
   .play-btn-circle {
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+  }
+  .custom-table th:nth-child(4),
+  .custom-table td:nth-child(4) {
+    display: none; /* Hide Duration on small phones */
+  }
+}
+
+@media (max-width: 375px) {
+  .player-track-info {
+    width: 40%;
+  }
+  .player-playback-controls {
+    width: 60%;
+  }
+}
+
+@media (max-width: 320px) {
+  .player-bar {
+    flex-direction: column;
+    height: auto;
+    gap: 10px;
+  }
+  .player-track-info, .player-playback-controls {
+    width: 100%;
+    justify-content: center;
+  }
+}
