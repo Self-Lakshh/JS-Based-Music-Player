@@ -57,3 +57,23 @@ export const LyricsEngine = {
         const wMs = parseInt(wMsStr.padEnd(3, '0').slice(0, 3), 10);
         const wTime = wMins * 60 + wSecs + wMs / 1000;
         const wText = wordMatch[4].trim();
+        if (wText) {
+          words.push({ time: wTime, text: wText, duration: 0 });
+        }
+      }
+
+      // Calculate durations for words
+      for (let i = 0; i < words.length; i++) {
+        if (i < words.length - 1) {
+          words[i].duration = words[i + 1].time - words[i].time;
+        } else {
+          // Last word gets a default 0.8s duration or remainder
+          words[i].duration = 0.8;
+        }
+      }
+
+      // If word-level tags existed, clean the display text
+      let displayText = text;
+      if (words.length > 0) {
+        displayText = words.map(w => w.text).join(' ');
+      }
