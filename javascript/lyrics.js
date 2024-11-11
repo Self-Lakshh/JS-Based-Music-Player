@@ -37,3 +37,23 @@ export const LyricsEngine = {
       }
 
       if (tags.length === 0) return;
+
+      // Extract the remaining text after removing all timestamp tags
+      let text = line;
+      tags.forEach((tag) => {
+        text = text.replace(tag.raw, '');
+      });
+      text = text.trim();
+
+      // Check for word-level timestamps, e.g., "<00:12.34> hello <00:12.80> world"
+      const words = [];
+      const wordRegex = /<(\d{2}):(\d{2})(?:\.(\d{2,3}))?>([^<]*)/g;
+      let wordMatch;
+      
+      while ((wordMatch = wordRegex.exec(text)) !== null) {
+        const wMins = parseInt(wordMatch[1], 10);
+        const wSecs = parseInt(wordMatch[2], 10);
+        const wMsStr = wordMatch[3] || '00';
+        const wMs = parseInt(wMsStr.padEnd(3, '0').slice(0, 3), 10);
+        const wTime = wMins * 60 + wSecs + wMs / 1000;
+        const wText = wordMatch[4].trim();
