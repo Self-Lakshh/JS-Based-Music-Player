@@ -116,3 +116,23 @@ export const LyricsEngine = {
       return;
     }
 
+    this.parsedLyrics.forEach((line, index) => {
+      const lineEl = document.createElement('div');
+      lineEl.classList.add('lyric-line');
+      lineEl.dataset.index = index;
+      lineEl.dataset.time = line.time;
+
+      if (line.words) {
+        // Karaoke mode formatting (spanned words)
+        line.words.forEach((word, wIdx) => {
+          const wordSpan = document.createElement('span');
+          wordSpan.classList.add('lyric-word');
+          wordSpan.textContent = word.text + ' ';
+          wordSpan.dataset.offset = word.timeOffset;
+          wordSpan.dataset.duration = word.duration;
+          lineEl.appendChild(wordSpan);
+        });
+      } else {
+        lineEl.textContent = line.text || '• • •';
+      }
+
