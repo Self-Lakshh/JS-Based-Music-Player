@@ -96,3 +96,23 @@ export const LyricsEngine = {
 
     // Sort lines by timestamp
     result.sort((a, b) => a.time - b.time);
+    this.parsedLyrics = result;
+    return result;
+  },
+
+  /**
+   * Renders the parsed lyrics to the DOM.
+   */
+  render(container) {
+    this.containerEl = container;
+    this.containerEl.innerHTML = '';
+    this.activeLineIndex = -1;
+
+    if (this.parsedLyrics.length === 0) {
+      const emptyMsg = document.createElement('div');
+      emptyMsg.classList.add('lyrics-empty');
+      emptyMsg.textContent = 'No lyrics available';
+      this.containerEl.appendChild(emptyMsg);
+      return;
+    }
+
