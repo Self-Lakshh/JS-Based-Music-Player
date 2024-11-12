@@ -77,3 +77,22 @@ export const LyricsEngine = {
       if (words.length > 0) {
         displayText = words.map(w => w.text).join(' ');
       }
+
+      // Add a separate entry for each timestamp tag (supports repeated lines)
+      tags.forEach((tag) => {
+        // Adjust word timestamps relative to the line's starting time
+        const adjustedWords = words.map(w => ({
+          ...w,
+          timeOffset: w.time - tag.time
+        }));
+
+        result.push({
+          time: tag.time,
+          text: displayText,
+          words: adjustedWords.length > 0 ? adjustedWords : null
+        });
+      });
+    });
+
+    // Sort lines by timestamp
+    result.sort((a, b) => a.time - b.time);
