@@ -136,3 +136,23 @@ export const LyricsEngine = {
         lineEl.textContent = line.text || '• • •';
       }
 
+      this.containerEl.appendChild(lineEl);
+    });
+  },
+
+  /**
+   * Synchronizes active lyric line and scroll animations.
+   */
+  sync(currentTime, seekCallback) {
+    if (this.parsedLyrics.length === 0 || !this.containerEl) return;
+
+    let activeIndex = -1;
+    for (let i = 0; i < this.parsedLyrics.length; i++) {
+      if (currentTime >= this.parsedLyrics[i].time) {
+        activeIndex = i;
+      } else {
+        break;
+      }
+    }
+
+    if (activeIndex !== this.activeLineIndex) {
