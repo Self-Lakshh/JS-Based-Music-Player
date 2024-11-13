@@ -156,3 +156,22 @@ export const LyricsEngine = {
     }
 
     if (activeIndex !== this.activeLineIndex) {
+      const oldActive = this.containerEl.querySelector('.lyric-line.active');
+      if (oldActive) oldActive.classList.remove('active', 'passed');
+
+      // Mark previously passed lines
+      const allLines = this.containerEl.querySelectorAll('.lyric-line');
+      allLines.forEach((line, idx) => {
+        if (idx < activeIndex) {
+          line.classList.add('passed');
+          line.classList.remove('active');
+        } else if (idx === activeIndex) {
+          line.classList.add('active');
+          line.classList.remove('passed');
+        } else {
+          line.classList.remove('active', 'passed');
+        }
+      });
+
+      this.activeLineIndex = activeIndex;
+
