@@ -175,3 +175,23 @@ export const LyricsEngine = {
 
       this.activeLineIndex = activeIndex;
 
+      // Scroll active line to center
+      if (activeIndex !== -1) {
+        const activeEl = allLines[activeIndex];
+        const containerHeight = this.containerEl.clientHeight;
+        const targetScrollTop = activeEl.offsetTop - containerHeight / 2 + activeEl.clientHeight / 2;
+        
+        this.containerEl.scrollTo({
+          top: Math.max(0, targetScrollTop),
+          behavior: 'smooth'
+        });
+      }
+    }
+
+    // Handle Word Highlights (Karaoke Progress)
+    if (this.karaokeMode && activeIndex !== -1) {
+      const activeLine = this.parsedLyrics[activeIndex];
+      const activeEl = this.containerEl.querySelector(`.lyric-line[data-index="${activeIndex}"]`);
+      
+      if (activeEl && activeLine.words) {
+        const lineTimeOffset = currentTime - activeLine.time;
