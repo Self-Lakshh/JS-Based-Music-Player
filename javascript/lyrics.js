@@ -195,3 +195,23 @@ export const LyricsEngine = {
       
       if (activeEl && activeLine.words) {
         const lineTimeOffset = currentTime - activeLine.time;
+        const wordSpans = activeEl.querySelectorAll('.lyric-word');
+
+        wordSpans.forEach((span, wIdx) => {
+          const word = activeLine.words[wIdx];
+          if (!word) return;
+
+          const start = word.timeOffset;
+          const duration = word.duration;
+          
+          if (lineTimeOffset >= start + duration) {
+            // Completely sung
+            span.style.backgroundSize = '100% 100%';
+            span.classList.add('sung');
+          } else if (lineTimeOffset < start) {
+            // Not yet reached
+            span.style.backgroundSize = '0% 100%';
+            span.classList.remove('sung');
+          } else {
+            // Currently singing - calculate exact percentage fill
+            const pct = ((lineTimeOffset - start) / duration) * 100;
