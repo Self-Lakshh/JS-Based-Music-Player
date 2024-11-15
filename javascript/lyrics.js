@@ -215,3 +215,23 @@ export const LyricsEngine = {
           } else {
             // Currently singing - calculate exact percentage fill
             const pct = ((lineTimeOffset - start) / duration) * 100;
+            span.style.backgroundSize = `${pct}% 100%`;
+            span.classList.remove('sung');
+          }
+        });
+      }
+    }
+  },
+
+  /**
+   * Configures click handlers on lyric lines for seek-on-click navigation.
+   */
+  bindClicks(seekCallback) {
+    if (!this.containerEl) return;
+
+    this.containerEl.addEventListener('click', (event) => {
+      const lineEl = event.target.closest('.lyric-line');
+      if (lineEl && seekCallback) {
+        const seekTime = parseFloat(lineEl.dataset.time);
+        if (!isNaN(seekTime)) {
+          seekCallback(seekTime);
