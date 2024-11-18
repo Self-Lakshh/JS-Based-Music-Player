@@ -235,3 +235,22 @@ export const LyricsEngine = {
         const seekTime = parseFloat(lineEl.dataset.time);
         if (!isNaN(seekTime)) {
           seekCallback(seekTime);
+        }
+      }
+    });
+  },
+
+  // --- PROCEDURAL LYRICS GENERATOR ---
+
+  loadProceduralLyrics(trackId, title = '', artist = '', duration = 120) {
+    let lrc = '';
+    if (trackId === 'synth-1') {
+      lrc = `
+[00:00.00] <00:00.00> (Instrumental <00:02.00> Intro <00:04.00> - <00:05.00> Retro <00:06.00> Arpeggios)
+[00:07.50] <00:07.50> Beep <00:08.50> boop, <00:09.50> enter <00:10.50> the <00:11.50> glowing <00:13.00> grid.
+[00:15.00] <00:15.00> Retro <00:16.00> waves <00:17.50> that <00:18.50> you <00:19.50> cannot <00:21.00> resist.
+[00:22.50] <00:22.50> 8-bit <00:23.50> code <00:25.00> floating <00:26.50> in <00:27.50> the <00:29.00> air.
+[00:30.00] <00:30.00> Synthesized <00:32.00> dreams <00:33.50> dancing <00:35.00> everywhere.
+[00:37.50] <00:37.50> (Chiptune <00:40.00> Melodic <00:43.00> Solo <00:48.00> - <00:50.00> Pulse <00:51.00> Width)
+[00:52.50] <00:52.50> Pushing <00:53.50> pixels, <00:55.00> shifting <00:56.50> application <00:58.00> state.
+[01:00.00] <01:00.00> BeatStream <01:01.50> running, <01:03.00> please <01:04.00> do <01:05.00> not <01:06.00> be <01:07.50> late!
