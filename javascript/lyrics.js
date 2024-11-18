@@ -274,3 +274,23 @@ export const LyricsEngine = {
       lrc = `
 [00:00.00] <00:00.00> (Neon <00:02.00> Horizon <00:04.00> Synthwave <00:06.00> Drums <00:08.00> Rising)
 [00:10.00] <00:10.00> Riding <00:11.50> fast <00:12.50> on <00:13.50> the <00:14.50> laser <00:16.50> lines.
+[00:18.00] <00:18.00> Magenta <00:20.00> sun <00:21.50> in <00:22.50> our <00:24.00> designs.
+[00:26.00] <00:26.00> Retro <00:27.50> grid <00:29.00> stretching <00:30.50> out <00:31.50> so <00:33.50> wide.
+[00:35.00] <00:35.00> We <00:36.50> have <00:37.50> the <00:38.50> rhythm <00:40.00> on <00:41.00> our <00:42.50> side!
+[00:44.00] <00:44.00> (Filter <00:48.00> Sweep <00:52.00> - <00:54.00> Heavy <00:56.00> Bassline)
+[00:58.00] <00:58.00> Electric <01:00.00> dreams <01:01.50> calling <01:03.00> in <01:04.00> the <01:05.50> night.
+[01:07.00] <01:07.00> Cyan <01:08.50> horizons <01:10.50> shining <01:12.50> bright!
+[01:15.00] <01:15.00> (Outro <01:20.00> Beat <01:25.00> Echoes <01:30.00> Out)
+      `;
+    } else if (typeof trackId === 'string' && trackId.startsWith('bolly-')) {
+      lrc = this.getBollywoodLyrics(trackId, title, artist, duration);
+    }
+    
+    this.parse(lrc.trim());
+  },
+
+  getBollywoodLyrics(trackId, title, artist, duration) {
+    if (trackId === 'bolly-1') { // Saiyara
+      return `
+[00:00.00] <00:00.00> (Instrumental <00:02.00> Intro <00:04.00> - <00:05.00> Saiyara <00:06.00> Flute)
+[00:07.00] <00:07.00> Tum <00:07.50> se <00:08.00> hi <00:08.50> din <00:09.00> hota <00:09.50> hai
