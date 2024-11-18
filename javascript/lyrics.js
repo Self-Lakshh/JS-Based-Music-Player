@@ -254,3 +254,23 @@ export const LyricsEngine = {
 [00:37.50] <00:37.50> (Chiptune <00:40.00> Melodic <00:43.00> Solo <00:48.00> - <00:50.00> Pulse <00:51.00> Width)
 [00:52.50] <00:52.50> Pushing <00:53.50> pixels, <00:55.00> shifting <00:56.50> application <00:58.00> state.
 [01:00.00] <01:00.00> BeatStream <01:01.50> running, <01:03.00> please <01:04.00> do <01:05.00> not <01:06.00> be <01:07.50> late!
+[01:07.50] <01:07.50> Beep <01:08.50> boop, <01:09.50> we <01:10.50> are <01:11.50> flying <01:12.50> in <01:13.50> the <01:14.50> zone.
+[01:15.00] <01:15.00> Music <01:16.00> server <01:17.50> standard <01:19.00> on <01:20.00> its <01:21.50> throne!
+[01:22.50] <01:22.50> (Instrumental <01:25.00> Outro <01:28.00> - <01:30.00> Decaying <01:31.00> Delay)
+      `;
+    } else if (trackId === 'synth-2') {
+      lrc = `
+[00:00.00] <00:00.00> (Instrumental <00:03.00> Ambient <00:06.00> Lofi <00:09.00> Intro)
+[00:12.00] <00:12.00> Midnight <00:14.00> breeze <00:16.00> blows <00:18.00> through <00:20.00> the <00:22.00> screen.
+[00:24.00] <00:24.00> The <00:25.00> cleanest <00:27.00> code <00:29.00> you've <00:31.00> ever <00:34.00> seen.
+[00:36.00] <00:36.00> Soft <00:38.00> triangles <00:41.00> echo <00:43.00> so <00:45.00> slow.
+[00:48.00] <00:48.00> Chill <00:50.00> frequencies <00:53.00> starting <00:55.00> to <00:57.00> glow.
+[01:00.00] <01:00.00> (Soft <01:04.00> Vinyl <01:08.00> Crackle <01:12.00> Bridge)
+[01:16.00] <01:16.00> Close <01:18.00> your <01:20.00> eyes, <01:22.00> let <01:24.00> the <01:26.00> filter <01:29.00> sweep.
+[01:32.00] <01:32.00> Beautiful <01:35.00> memories <01:38.00> we <01:40.00> will <01:42.00> keep.
+[01:44.00] <01:44.00> (Outro <01:48.00> Fades <01:52.00> Into <01:56.00> Silence)
+      `;
+    } else if (trackId === 'synth-3') {
+      lrc = `
+[00:00.00] <00:00.00> (Neon <00:02.00> Horizon <00:04.00> Synthwave <00:06.00> Drums <00:08.00> Rising)
+[00:10.00] <00:10.00> Riding <00:11.50> fast <00:12.50> on <00:13.50> the <00:14.50> laser <00:16.50> lines.
