@@ -373,3 +373,23 @@ export const LyricsEngine = {
       let wordTags = '';
       words.forEach(w => {
         const wMins = Math.floor(wTime / 60).toString().padStart(2, '0');
+        const wSecs = Math.floor(wTime % 60).toString().padStart(2, '0');
+        const wMs = Math.floor((wTime % 1) * 100).toString().padStart(2, '0');
+        wordTags += `<${wMins}:${wSecs}.${wMs}> ${w} `;
+        wTime += 0.8;
+      });
+
+      lines.push(`[${timeStr}] ${wordTags.trim()}`);
+      curTime += 12;
+    }
+
+    const endMins = Math.floor((duration - 5) / 60).toString().padStart(2, '0');
+    const endSecs = Math.floor((duration - 5) % 60).toString().padStart(2, '0');
+    lines.push(`[${endMins}:${endSecs}.00] <${endMins}:${endSecs}.00> (Outro <${endMins}:${endSecs}.30> - <${endMins}:${endSecs}.60> Fade <${endMins}:${endSecs}.90> Out)`);
+    
+    return lines.join('\n');
+  }
+    
+    this.parse(lrc.trim());
+  }
+};
