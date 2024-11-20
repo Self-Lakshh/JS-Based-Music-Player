@@ -333,3 +333,23 @@ export const LyricsEngine = {
 [00:50.00] <00:50.00> (Outro <00:54.00> Bulbul <00:58.00> Instrumentals)
       `;
     }
+
+    // Default dynamic generator
+    return this.generateDynamicLrc(title, artist, duration);
+  },
+
+  generateDynamicLrc(title, artist, duration) {
+    const lines = [];
+    lines.push('[00:00.00] <00:00.00> (Playing <00:02.00> procedural <00:04.00> synth: <00:06.00> ' + title + ')');
+    lines.push('[00:07.50] <00:07.50> Enjoying <00:08.50> the <00:09.50> original <00:10.50> movie <00:12.00> beats.');
+    lines.push('[00:14.00] <00:14.00> Sung <00:15.00> by <00:16.50> ' + artist.split(',')[0] + ' <00:18.00> in <00:19.50> full <00:21.00> glory.');
+    
+    let curTime = 25;
+    const phrases = [
+      "Let the synthesizers play the sweet frequencies.",
+      "Adjust the 5-band equalizer settings in real-time.",
+      "Switch visualizer styles to wave or circular spectrum.",
+      "Backdrop blur glassmorphic overlays style active.",
+      "BeatStream local player is persistent and offline.",
+      "Your uploaded MP3 files save directly to IndexedDB.",
+      "This procedural track uses Web Audio oscillators.",
