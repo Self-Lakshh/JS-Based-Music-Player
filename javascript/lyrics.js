@@ -353,3 +353,23 @@ export const LyricsEngine = {
       "BeatStream local player is persistent and offline.",
       "Your uploaded MP3 files save directly to IndexedDB.",
       "This procedural track uses Web Audio oscillators.",
+      "Feel the beat pulse expanding the album cover art.",
+      "We are listening to the cinematic melodies of India.",
+      "A premium design inspired by modern music systems.",
+      "Bringing desktop grade experience to your web browser."
+    ];
+
+    let pIdx = 0;
+    while (curTime < duration - 15) {
+      const minutes = Math.floor(curTime / 60).toString().padStart(2, '0');
+      const seconds = Math.floor(curTime % 60).toString().padStart(2, '0');
+      const timeStr = `${minutes}:${seconds}.00`;
+      
+      const phrase = phrases[pIdx % phrases.length];
+      pIdx++;
+      
+      const words = phrase.split(' ');
+      let wTime = curTime;
+      let wordTags = '';
+      words.forEach(w => {
+        const wMins = Math.floor(wTime / 60).toString().padStart(2, '0');
