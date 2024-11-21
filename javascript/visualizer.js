@@ -33,3 +33,21 @@ export const Visualizer = {
   resize() {
     if (!this.canvas) return;
     const rect = this.canvas.parentElement.getBoundingClientRect();
+    this.canvas.width = rect.width * (window.devicePixelRatio || 1);
+    this.canvas.height = rect.height * (window.devicePixelRatio || 1);
+    this.canvas.style.width = '100%';
+    this.canvas.style.height = '100%';
+    if (this.ctx) {
+      this.ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+    }
+  },
+
+  setMode(newMode) {
+    this.mode = newMode;
+  },
+
+  start() {
+    if (this.animationId) return;
+    const renderLoop = () => {
+      this.draw();
+      this.animationId = requestAnimationFrame(renderLoop);
