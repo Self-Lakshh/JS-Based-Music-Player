@@ -15,3 +15,21 @@ export const Visualizer = {
   accentColors: {
     cyan: '#00f2fe',
     purple: '#4facfe',
+    neonPurple: '#d946ef',
+    orange: '#f97316',
+    green: '#10b981'
+  },
+
+  init(canvasEl, engine) {
+    this.canvas = canvasEl;
+    this.ctx = this.canvas.getContext('2d');
+    this.audioEngine = engine;
+    this.resize();
+    
+    // Listen for resize
+    window.addEventListener('resize', () => this.resize());
+  },
+
+  resize() {
+    if (!this.canvas) return;
+    const rect = this.canvas.parentElement.getBoundingClientRect();
