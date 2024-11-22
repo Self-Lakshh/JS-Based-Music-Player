@@ -105,3 +105,20 @@ export const Visualizer = {
 
   drawBars(data, w, h, isSilent) {
     const ctx = this.ctx;
+    const barCount = 64;
+    const barWidth = (w / barCount) * 0.75;
+    const barGap = (w / barCount) * 0.25;
+    const dataLen = data.length;
+
+    // Draw gradients
+    const gradient = ctx.createLinearGradient(0, h, 0, 0);
+    gradient.addColorStop(0, 'rgba(79, 172, 254, 0.2)');
+    gradient.addColorStop(0.5, 'rgba(0, 242, 254, 0.8)');
+    gradient.addColorStop(1, 'rgba(217, 70, 239, 1)');
+
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = 'rgba(0, 242, 254, 0.5)';
+
+    for (let i = 0; i < barCount; i++) {
+      // Map bars logarithmically
+      const percentIdx = i / barCount;
