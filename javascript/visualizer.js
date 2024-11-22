@@ -51,3 +51,21 @@ export const Visualizer = {
     const renderLoop = () => {
       this.draw();
       this.animationId = requestAnimationFrame(renderLoop);
+    };
+    renderLoop();
+  },
+
+  stop() {
+    if (this.animationId) {
+      cancelAnimationFrame(this.animationId);
+      this.animationId = null;
+    }
+    this.clear();
+  },
+
+  clear() {
+    if (!this.ctx || !this.canvas) return;
+    const w = this.canvas.width / (window.devicePixelRatio || 1);
+    const h = this.canvas.height / (window.devicePixelRatio || 1);
+    this.ctx.clearRect(0, 0, w, h);
+  },
