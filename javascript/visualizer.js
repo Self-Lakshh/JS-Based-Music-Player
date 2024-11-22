@@ -87,3 +87,21 @@ export const Visualizer = {
         isSilent = false;
         break;
       }
+    }
+
+    // Trigger beat reactions in UI
+    this.processBeatReactivity(freqData, isSilent);
+
+    this.ctx.clearRect(0, 0, w, h);
+
+    if (this.mode === 'bars') {
+      this.drawBars(freqData, w, h, isSilent);
+    } else if (this.mode === 'wave') {
+      this.drawWave(waveData, w, h, isSilent);
+    } else if (this.mode === 'circle') {
+      this.drawCircle(freqData, w, h, isSilent);
+    }
+  },
+
+  drawBars(data, w, h, isSilent) {
+    const ctx = this.ctx;
