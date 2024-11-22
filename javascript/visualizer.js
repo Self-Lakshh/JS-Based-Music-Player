@@ -122,3 +122,21 @@ export const Visualizer = {
     for (let i = 0; i < barCount; i++) {
       // Map bars logarithmically
       const percentIdx = i / barCount;
+      const dataIdx = Math.floor(Math.pow(percentIdx, 1.5) * (dataLen * 0.6));
+      let val = isSilent ? 0 : data[dataIdx] || 0;
+
+      // Scale value to canvas height
+      const barHeight = (val / 255) * h * 0.85;
+
+      const x = i * (barWidth + barGap) + barGap / 2;
+      const y = h - barHeight - 10;
+
+      // Draw active bars with round corners
+      ctx.fillStyle = gradient;
+      this.drawRoundedRect(ctx, x, y, barWidth, barHeight + 10, 4);
+
+      // Draw peaks (caps)
+      if (this.peakHold[i] === undefined) this.peakHold[i] = 0;
+
+      if (barHeight > this.peakHold[i]) {
+        this.peakHold[i] = barHeight;
