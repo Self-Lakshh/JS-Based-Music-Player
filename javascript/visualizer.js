@@ -69,3 +69,21 @@ export const Visualizer = {
     const h = this.canvas.height / (window.devicePixelRatio || 1);
     this.ctx.clearRect(0, 0, w, h);
   },
+
+  draw() {
+    if (!this.ctx || !this.canvas || !this.audioEngine) return;
+
+    const w = this.canvas.width / (window.devicePixelRatio || 1);
+    const h = this.canvas.height / (window.devicePixelRatio || 1);
+
+    // Get current frequency and time-domain data
+    const freqData = this.audioEngine.getFrequencyData();
+    const waveData = this.audioEngine.getWaveformData();
+
+    // Check if music is actually playing (all zeros)
+    let isSilent = true;
+    for (let i = 0; i < freqData.length; i++) {
+      if (freqData[i] > 0) {
+        isSilent = false;
+        break;
+      }
