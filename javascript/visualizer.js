@@ -194,3 +194,21 @@ export const Visualizer = {
         }
 
         x += sliceWidth;
+      }
+
+      ctx.lineTo(w, h / 2);
+      ctx.stroke();
+    }
+    
+    ctx.shadowBlur = 0; // reset
+  },
+
+  drawCircle(data, w, h, isSilent) {
+    const ctx = this.ctx;
+    const centerX = w / 2;
+    const centerY = h / 2;
+    const baseRadius = Math.min(w, h) * 0.22;
+    const dataLen = data.length;
+
+    // Detect instant beat
+    let energySum = 0;
