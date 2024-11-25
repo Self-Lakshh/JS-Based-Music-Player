@@ -176,3 +176,21 @@ export const Visualizer = {
       for (let i = 0; i < data.length; i++) {
         // Average value is 128
         let val = isSilent ? 128 : data[i];
+        let v = val / 128.0; // 0 to 2
+        
+        // Add a slight phase shift for the second wave pass
+        if (pass === 1 && !isSilent) {
+          const shiftIdx = (i + 15) % data.length;
+          val = data[shiftIdx];
+          v = val / 128.0;
+        }
+
+        let y = (v * h) / 2;
+
+        if (i === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+
+        x += sliceWidth;
