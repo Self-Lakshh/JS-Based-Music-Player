@@ -140,3 +140,21 @@ export const Visualizer = {
 
       if (barHeight > this.peakHold[i]) {
         this.peakHold[i] = barHeight;
+      } else {
+        this.peakHold[i] -= 1.5; // decay
+        if (this.peakHold[i] < 0) this.peakHold[i] = 0;
+      }
+
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.shadowColor = 'rgba(255, 255, 255, 0.5)';
+      ctx.fillRect(x, h - this.peakHold[i] - 15, barWidth, 2);
+    }
+    ctx.shadowBlur = 0; // reset
+  },
+
+  drawWave(data, w, h, isSilent) {
+    const ctx = this.ctx;
+    ctx.lineWidth = 3;
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = 'rgba(0, 242, 254, 0.8)';
+    
