@@ -158,3 +158,21 @@ export const Visualizer = {
     ctx.shadowBlur = 15;
     ctx.shadowColor = 'rgba(0, 242, 254, 0.8)';
     
+    // Draw 3 offset waves to look like an oscilloscope glow
+    for (let pass = 0; pass < 2; pass++) {
+      ctx.beginPath();
+      
+      if (pass === 0) {
+        ctx.strokeStyle = 'rgba(0, 242, 254, 1)';
+        ctx.lineWidth = 3;
+      } else {
+        ctx.strokeStyle = 'rgba(217, 70, 239, 0.5)';
+        ctx.lineWidth = 1.5;
+      }
+
+      const sliceWidth = w / data.length;
+      let x = 0;
+
+      for (let i = 0; i < data.length; i++) {
+        // Average value is 128
+        let val = isSilent ? 128 : data[i];
