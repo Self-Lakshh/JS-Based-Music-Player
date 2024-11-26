@@ -212,3 +212,21 @@ export const Visualizer = {
 
     // Detect instant beat
     let energySum = 0;
+    const checkCount = 30; // check first 30 bins (bass frequencies)
+    for (let i = 0; i < checkCount; i++) {
+      energySum += data[i] || 0;
+    }
+    const avgEnergy = energySum / checkCount;
+    const isBeat = avgEnergy > 150 && !isSilent;
+
+    // Pulse radius with beat
+    const radiusMultiplier = isBeat ? 1.12 : 1.0;
+    const radius = baseRadius * radiusMultiplier;
+
+    // Generate burst particles on beat
+    if (isBeat && this.particles.length < 150) {
+      const burstCount = Math.floor(Math.random() * 5) + 3;
+      for (let i = 0; i < burstCount; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 3 + 1.5;
+        this.particles.push({
