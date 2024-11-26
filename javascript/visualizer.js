@@ -247,3 +247,21 @@ export const Visualizer = {
       p.x += p.vx;
       p.y += p.vy;
       p.alpha -= p.decay;
+      
+      if (p.alpha <= 0) {
+        this.particles.splice(idx, 1);
+        return;
+      }
+
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = p.alpha;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1.0; // reset
+
+    // Draw glowing ring
+    ctx.shadowBlur = isBeat ? 25 : 12;
+    ctx.shadowColor = isBeat ? 'rgba(217, 70, 239, 0.8)' : 'rgba(0, 242, 254, 0.5)';
+    ctx.lineWidth = 4;
