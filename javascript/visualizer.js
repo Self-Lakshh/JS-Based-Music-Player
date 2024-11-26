@@ -230,3 +230,20 @@ export const Visualizer = {
         const angle = Math.random() * Math.PI * 2;
         const speed = Math.random() * 3 + 1.5;
         this.particles.push({
+          x: centerX + Math.cos(angle) * radius,
+          y: centerY + Math.sin(angle) * radius,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          size: Math.random() * 3.5 + 1.5,
+          color: Math.random() > 0.5 ? this.accentColors.cyan : this.accentColors.neonPurple,
+          alpha: 1.0,
+          decay: Math.random() * 0.02 + 0.01
+        });
+      }
+    }
+
+    // Update and draw particles
+    this.particles.forEach((p, idx) => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.alpha -= p.decay;
