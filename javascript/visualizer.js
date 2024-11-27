@@ -283,3 +283,21 @@ export const Visualizer = {
       const x = centerX + Math.cos(angle) * r;
       const y = centerY + Math.sin(angle) * r;
 
+      if (i === 0) {
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+      }
+    }
+    
+    ctx.closePath();
+    
+    // Gradient outline
+    const ringGradient = ctx.createRadialGradient(centerX, centerY, radius * 0.8, centerX, centerY, radius * 1.5);
+    ringGradient.addColorStop(0, this.accentColors.cyan);
+    ringGradient.addColorStop(1, this.accentColors.neonPurple);
+    ctx.strokeStyle = ringGradient;
+    ctx.stroke();
+
+    // Draw inner glow circle
+    ctx.fillStyle = 'rgba(20, 10, 40, 0.35)';
