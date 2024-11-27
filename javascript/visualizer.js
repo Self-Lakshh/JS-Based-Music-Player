@@ -265,3 +265,21 @@ export const Visualizer = {
     ctx.shadowBlur = isBeat ? 25 : 12;
     ctx.shadowColor = isBeat ? 'rgba(217, 70, 239, 0.8)' : 'rgba(0, 242, 254, 0.5)';
     ctx.lineWidth = 4;
+    
+    // Draw frequency nodes on circle
+    const numPoints = 80;
+    ctx.beginPath();
+
+    for (let i = 0; i < numPoints; i++) {
+      const angle = (i / numPoints) * Math.PI * 2;
+      
+      // Mirror the frequencies around the circle
+      const dataIdx = Math.floor(Math.abs(Math.sin(angle)) * (dataLen * 0.45));
+      const val = isSilent ? 0 : data[dataIdx] || 0;
+      
+      // Calculate node distance
+      const offset = (val / 255) * baseRadius * 0.6;
+      const r = radius + offset;
+      const x = centerX + Math.cos(angle) * r;
+      const y = centerY + Math.sin(angle) * r;
+
