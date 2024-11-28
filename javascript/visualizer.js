@@ -301,3 +301,21 @@ export const Visualizer = {
 
     // Draw inner glow circle
     ctx.fillStyle = 'rgba(20, 10, 40, 0.35)';
+    ctx.fill();
+    ctx.shadowBlur = 0; // reset
+  },
+
+  drawRoundedRect(ctx, x, y, width, height, radius) {
+    if (height < 2 * radius) radius = height / 2;
+    if (width < 2 * radius) radius = width / 2;
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.arcTo(x + width, y, x + width, y + height, radius);
+    ctx.arcTo(x + width, y + height, x, y + height, radius);
+    ctx.arcTo(x, y + height, x, y, radius);
+    ctx.arcTo(x, y, x + width, y, radius);
+    ctx.closePath();
+    ctx.fill();
+  },
+
+  // --- BEAT DETECTION FOR UI REACTIVITY ---
