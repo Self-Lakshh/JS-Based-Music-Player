@@ -319,3 +319,21 @@ export const Visualizer = {
   },
 
   // --- BEAT DETECTION FOR UI REACTIVITY ---
+  processBeatReactivity(data, isSilent) {
+    if (isSilent) {
+      this.applyBeatScale(1.0);
+      return;
+    }
+
+    // Measure bass range energy (first 25 bins)
+    let sum = 0;
+    const count = 25;
+    for (let i = 0; i < count; i++) {
+      sum += data[i] || 0;
+    }
+    const avg = sum / count;
+
+    // Normalizing multiplier (e.g. 1.0 to 1.08)
+    const scale = 1.0 + Math.max(0, (avg - 130) / 125) * 0.08;
+    this.applyBeatScale(scale);
+  },
