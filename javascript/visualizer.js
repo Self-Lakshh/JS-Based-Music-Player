@@ -337,3 +337,21 @@ export const Visualizer = {
     const scale = 1.0 + Math.max(0, (avg - 130) / 125) * 0.08;
     this.applyBeatScale(scale);
   },
+
+  applyBeatScale(scale) {
+    const albumArt = document.querySelector('.player-album-art img');
+    if (albumArt) {
+      albumArt.style.transform = `scale(${scale})`;
+      // Also add glow shadow pulse
+      const shadowPct = (scale - 1.0) / 0.08; // 0 to 1
+      albumArt.style.boxShadow = `0px 0px ${20 + shadowPct * 15}px ${shadowPct * 6}px rgba(0, 242, 254, ${0.3 + shadowPct * 0.3})`;
+    }
+    
+    // Pulse ambient visualizer glow
+    const visualizerGrid = document.querySelector('.visualizer-glow');
+    if (visualizerGrid) {
+      const opacity = 0.15 + ((scale - 1.0) / 0.08) * 0.35;
+      visualizerGrid.style.opacity = opacity.toString();
+    }
+  }
+};
