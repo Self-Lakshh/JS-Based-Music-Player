@@ -271,3 +271,58 @@ export const PlayerUI = {
     vol = Math.max(0, Math.min(vol, 1));
     Database.saveSettings({ volume: vol });
     
+    const slider = document.getElementById('volume-slider');
+    if (slider) slider.value = Math.round(vol * 100);
+    
+    AudioEngine.setVolume(this.isMuted ? 0 : vol);
+  },
+
+  toggleMute() {
+    this.isMuted = !this.isMuted;
+    const settings = Database.getSettings();
+    const currentVol = settings.volume || 0.8;
+    AudioEngine.setVolume(this.isMuted ? 0 : currentVol);
+
+    const btn = document.getElementById('player-mute-btn');
+    if (btn) {
+      btn.innerHTML = this.isMuted ? '🔇' : '🔊';
+      if (this.isMuted) btn.classList.add('muted');
+      else btn.classList.remove('muted');
+    }
+  },
+
+  // --- QUEUE SYSTEM ---
+
+  initQueue() {
+    this.currentQueue = Database.getQueue();
+    const currentId = Database.getCurrentTrackId();
+    this.queueIndex = this.currentQueue.indexOf(currentId);
+  },
+
+  setQueue(trackIds, startIndex = 0) {
+    this.currentQueue = trackIds;
+    Database.saveQueue(trackIds);
+    this.queueIndex = startIndex;
+    if (this.currentQueue[startIndex]) {
+      this.playTrack(this.currentQueue[startIndex]);
+    }
+  },
+
+  addToQueue(trackId) {
+    if (!this.currentQueue.includes(trackId)) {
+      this.currentQueue.push(trackId);
+      Database.saveQueue(this.currentQueue);
+      this.updateQueueUI();
+    }
+  },
+
+  playNextTrack() {
+    if (this.currentQueue.length === 0) return;
+
+    const settings = Database.getSettings();
+    
+    if (settings.shuffle) {
+      // Pick random index
+      this.queueIndex = Math.floor(Math.random() * this.currentQueue.length);
+    } else {
+      this.queueIndex++;
