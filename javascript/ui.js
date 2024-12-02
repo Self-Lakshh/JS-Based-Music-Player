@@ -107,3 +107,58 @@ export const PlayerUI = {
   },
 
   // --- PLAYBACK LOADING & TRIGGERS ---
+
+  async playTrack(id, seekTime = 0) {
+    this.isPlaying = true;
+    Database.saveCurrentTrackId(id);
+    await this.loadTrack(id, true, seekTime);
+    this.updatePlayStateUI();
+  },
+
+  async loadTrack(id, shouldPlay = true, seekTime = 0) {
+    const track = this.tracks.find(t => String(t.id) === String(id));
+    if (!track) return;
+
+    this.currentTrack = track;
+
+    // Add to history
+    if (shouldPlay) {
+      Database.addHistory(id);
+      this.renderHome(); // Refresh recently played
+    }
+
+    // Load track metadata to player bar
+    const titleEl = document.getElementById('player-track-title');
+    const artistEl = document.getElementById('player-track-artist');
+    const coverEl = document.getElementById('player-cover-img');
+    const coverGradientEl = document.getElementById('player-cover-gradient');
+
+    if (titleEl) titleEl.textContent = track.title;
+    if (artistEl) artistEl.textContent = track.artist;
+
+    if (track.isProcedural) {
+      if (coverEl) coverEl.classList.add('d-none');
+      if (coverGradientEl) {
+        coverGradientEl.classList.remove('d-none');
+        coverGradientEl.style.background = track.coverGradient || 'linear-gradient(135deg, #00f2fe 0%, #4facfe 100%)';
+      }
+    } else {
+      if (coverGradientEl) coverGradientEl.classList.add('d-none');
+      if (coverEl) {
+        coverEl.classList.remove('d-none');
+        if (track.coverBlob) {
+          coverEl.src = URL.createObjectURL(track.coverBlob);
+        } else {
+          coverEl.src = 'assets/orange_logo.png'; // Fallback icon
+        }
+      }
+    }
+
+    // Set Favorite Heart state
+    const favHeart = document.getElementById('player-favorite-btn');
+    if (favHeart) {
+      if (Database.isFavorite(id)) {
+        favHeart.classList.add('active');
+        favHeart.innerHTML = '♥'; // Full heart
+      } else {
+        favHeart.classList.remove('active');
