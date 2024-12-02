@@ -216,3 +216,58 @@ export const PlayerUI = {
           AudioEngine.playLocalTrack(dbRecord.audioBlob, seekTime);
         } else {
           console.error("Could not find audio blob for track", track.id);
+        }
+      }
+      this.isPlaying = true;
+    } else {
+      AudioEngine.stop();
+      this.isPlaying = false;
+      // Pre-populate time slider
+      this.updatePlaybackProgress(seekTime, track.duration);
+    }
+
+    // Highlight row in track tables
+    document.querySelectorAll('tr[data-track-id]').forEach(row => {
+      if (String(row.dataset.trackId) === String(id)) {
+        row.classList.add('playing-row');
+      } else {
+        row.classList.remove('playing-row');
+      }
+    });
+
+    this.updatePlayStateUI();
+    this.updateQueueUI();
+  },
+
+  togglePlayPause() {
+    if (!this.currentTrack) return;
+    this.isPlaying = !this.isPlaying;
+
+    if (this.isPlaying) {
+      AudioEngine.resume();
+    } else {
+      AudioEngine.pause();
+    }
+    this.updatePlayStateUI();
+  },
+
+  seekForward(secs) {
+    if (!this.currentTrack) return;
+    const dur = this.currentTrack.duration;
+    const current = Database.getPlaybackTime();
+    AudioEngine.seek(current + secs, dur);
+  },
+
+  seekBackward(secs) {
+    if (!this.currentTrack) return;
+    const dur = this.currentTrack.duration;
+    const current = Database.getPlaybackTime();
+    AudioEngine.seek(Math.max(0, current - secs), dur);
+  },
+
+  adjustVolume(delta) {
+    const settings = Database.getSettings();
+    let vol = (settings.volume || 0.8) + delta;
+    vol = Math.max(0, Math.min(vol, 1));
+    Database.saveSettings({ volume: vol });
+    
