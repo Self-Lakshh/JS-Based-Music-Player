@@ -52,3 +52,58 @@ export const PlayerUI = {
     AudioEngine.onTimeUpdateCallback = (current, duration) => this.updatePlaybackProgress(current, duration);
     AudioEngine.onTrackEndedCallback = () => this.handleTrackEnded();
 
+    // Initial UI Render
+    this.renderHome();
+    this.renderSongsTable();
+    this.renderPlaylists();
+    this.setupEventListeners();
+    this.initQueue();
+
+    // Start keyboard shortcuts
+    KeyboardShortcuts.init(this);
+
+    // Load last playing track without auto-playing
+    const lastTrackId = Database.getCurrentTrackId();
+    const lastTime = Database.getPlaybackTime();
+    await this.loadTrack(lastTrackId, false, lastTime);
+  },
+
+  async refreshTracks() {
+    const dbTracks = await Database.getAllTracksFromDB();
+    const synthTracks = [
+      {
+        id: 'synth-1',
+        title: 'Chiptune Odyssey',
+        artist: 'Procedural Synth Engine',
+        album: 'Synthesized Dreams',
+        duration: 90,
+        genre: '8-Bit Retro',
+        isProcedural: true,
+        coverGradient: 'linear-gradient(135deg, #fbc2eb 0%, #a18cd1 100%)'
+      },
+      {
+        id: 'synth-2',
+        title: 'Midnight Breeze',
+        artist: 'Procedural Synth Engine',
+        album: 'Ambient Waves',
+        duration: 120,
+        genre: 'Ambient Lofi',
+        isProcedural: true,
+        coverGradient: 'linear-gradient(135deg, #00f2fe 0%, #4facfe 100%)'
+      },
+      {
+        id: 'synth-3',
+        title: 'Neon Horizon',
+        artist: 'Procedural Synth Engine',
+        album: 'Retro Future',
+        duration: 100,
+        genre: 'Synthwave',
+        isProcedural: true,
+        coverGradient: 'linear-gradient(135deg, #f97316 0%, #ff5e62 100%)'
+      }
+    ];
+
+    this.tracks = [...synthTracks, ...BOLLYWOOD_SEEDS, ...dbTracks];
+  },
+
+  // --- PLAYBACK LOADING & TRIGGERS ---
