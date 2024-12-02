@@ -381,3 +381,57 @@ export const PlayerUI = {
       else btn.classList.remove('active');
     }
   },
+
+  cycleRepeatMode() {
+    const settings = Database.getSettings();
+    let repeatVal = 'all';
+    if (settings.repeat === 'all') repeatVal = 'one';
+    else if (settings.repeat === 'one') repeatVal = 'off';
+    else repeatVal = 'all';
+
+    Database.saveSettings({ repeat: repeatVal });
+
+    const btn = document.getElementById('player-repeat-btn');
+    if (btn) {
+      btn.classList.remove('repeat-all', 'repeat-one', 'repeat-off');
+      if (repeatVal === 'all') {
+        btn.classList.add('active', 'repeat-all');
+        btn.innerHTML = '🔁';
+      } else if (repeatVal === 'one') {
+        btn.classList.add('active', 'repeat-one');
+        btn.innerHTML = '🔂';
+      } else {
+        btn.classList.remove('active');
+        btn.classList.add('repeat-off');
+        btn.innerHTML = '🔁';
+      }
+    }
+  },
+
+  // --- THEME & UI UPDATES ---
+
+  applyTheme(themeName) {
+    document.body.className = ''; // Reset body classes
+    document.body.classList.add(`theme-${themeName}`);
+
+    // Update settings in LocalStorage
+    Database.saveSettings({ theme: themeName });
+
+    // Active state in settings panel buttons
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+      if (btn.dataset.theme === themeName) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  },
+
+  updatePlayStateUI() {
+    const playBtns = document.querySelectorAll('.play-btn-circle');
+    playBtns.forEach(btn => {
+      btn.innerHTML = this.isPlaying ? '⏸' : '▶';
+    });
+
+    if (this.isPlaying) {
+      Visualizer.start();
