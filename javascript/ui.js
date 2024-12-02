@@ -326,3 +326,58 @@ export const PlayerUI = {
       this.queueIndex = Math.floor(Math.random() * this.currentQueue.length);
     } else {
       this.queueIndex++;
+      if (this.queueIndex >= this.currentQueue.length) {
+        if (settings.repeat === 'all') {
+          this.queueIndex = 0;
+        } else {
+          this.queueIndex = this.currentQueue.length - 1;
+          this.isPlaying = false;
+          AudioEngine.stop();
+          this.updatePlayStateUI();
+          return;
+        }
+      }
+    }
+
+    const nextId = this.currentQueue[this.queueIndex];
+    if (nextId) this.playTrack(nextId);
+  },
+
+  playPreviousTrack() {
+    if (this.currentQueue.length === 0) return;
+
+    this.queueIndex--;
+    if (this.queueIndex < 0) {
+      const settings = Database.getSettings();
+      if (settings.repeat === 'all') {
+        this.queueIndex = this.currentQueue.length - 1;
+      } else {
+        this.queueIndex = 0;
+      }
+    }
+
+    const prevId = this.currentQueue[this.queueIndex];
+    if (prevId) this.playTrack(prevId);
+  },
+
+  handleTrackEnded() {
+    const settings = Database.getSettings();
+    if (settings.repeat === 'one') {
+      // Replay same song
+      if (this.currentTrack) this.playTrack(this.currentTrack.id);
+    } else {
+      this.playNextTrack();
+    }
+  },
+
+  toggleShuffle() {
+    const settings = Database.getSettings();
+    const shuffleVal = !settings.shuffle;
+    Database.saveSettings({ shuffle: shuffleVal });
+
+    const btn = document.getElementById('player-shuffle-btn');
+    if (btn) {
+      if (shuffleVal) btn.classList.add('active');
+      else btn.classList.remove('active');
+    }
+  },
