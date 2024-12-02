@@ -162,3 +162,57 @@ export const PlayerUI = {
         favHeart.innerHTML = '♥'; // Full heart
       } else {
         favHeart.classList.remove('active');
+        favHeart.innerHTML = '♡'; // Empty heart
+      }
+    }
+
+    // Load Lyrics
+    if (track.isProcedural) {
+      LyricsEngine.loadProceduralLyrics(track.id, track.title, track.artist, track.duration);
+    } else {
+      // Mock lyrics for local files based on title
+      const mockLrc = `
+[00:00.00] (Playing local file: ${track.title})
+[00:05.00] Enjoy the high fidelity local audio!
+[00:15.00] Adjust the equalizer in settings for custom tuning.
+[00:25.00] Open visualizers tab to view canvas animations.
+[00:35.00] Support for local LRC files is coming soon.
+[00:45.00] BeatStream Music Player - Desktop grade experience.
+      `;
+      LyricsEngine.parse(mockLrc.trim());
+    }
+
+    const lyricsContainer = document.getElementById('lyrics-container');
+    if (lyricsContainer) {
+      LyricsEngine.render(lyricsContainer);
+      LyricsEngine.bindClicks((t) => AudioEngine.seek(t, track.duration));
+    }
+
+    // Set up Media Session API
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: track.title,
+        artist: track.artist,
+        album: track.album,
+        artwork: [
+          { src: 'assets/orange_logo.png', sizes: '512x512', type: 'image/png' }
+        ]
+      });
+
+      navigator.mediaSession.setActionHandler('play', () => this.togglePlayPause());
+      navigator.mediaSession.setActionHandler('pause', () => this.togglePlayPause());
+      navigator.mediaSession.setActionHandler('nexttrack', () => this.playNextTrack());
+      navigator.mediaSession.setActionHandler('previoustrack', () => this.playPreviousTrack());
+    }
+
+    // Start/Stop Audio Playback
+    if (shouldPlay) {
+      if (track.isProcedural) {
+        AudioEngine.playSynthTrack(track.id, seekTime, track.duration);
+      } else {
+        // Retrieve IndexedDB blob
+        const dbRecord = await Database.getTrack(track.id);
+        if (dbRecord && dbRecord.audioBlob) {
+          AudioEngine.playLocalTrack(dbRecord.audioBlob, seekTime);
+        } else {
+          console.error("Could not find audio blob for track", track.id);
