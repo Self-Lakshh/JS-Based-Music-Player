@@ -435,3 +435,58 @@ export const PlayerUI = {
 
     if (this.isPlaying) {
       Visualizer.start();
+    } else {
+      Visualizer.stop();
+    }
+  },
+
+  updatePlaybackProgress(current, duration) {
+    Database.savePlaybackTime(current);
+
+    const formatTime = (time) => {
+      if (isNaN(time)) return '0:00';
+      const m = Math.floor(time / 60);
+      const s = Math.floor(time % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    };
+
+    const currentText = document.getElementById('player-time-current');
+    const remainingText = document.getElementById('player-time-total');
+    const progressBar = document.getElementById('player-progress-bar');
+
+    if (currentText) currentText.textContent = formatTime(current);
+    if (remainingText) remainingText.textContent = formatTime(duration);
+
+    if (progressBar) {
+      const pct = duration > 0 ? (current / duration) * 100 : 0;
+      progressBar.value = pct;
+      progressBar.style.background = `linear-gradient(to right, var(--accent-color) ${pct}%, rgba(255, 255, 255, 0.1) ${pct}%)`;
+    }
+
+    // Sync Lyrics
+    LyricsEngine.sync(current);
+  },
+
+  // --- PAGE RENDERING MODULES ---
+
+  switchTab(tabId, data = null) {
+    this.activeTab = tabId;
+    
+    // Hide all tab panes
+    document.querySelectorAll('.tab-pane').forEach((pane) => {
+      pane.classList.add('d-none');
+    });
+
+    // Remove active class from navigation elements
+    document.querySelectorAll('.sidebar-nav-item').forEach((item) => {
+      item.classList.remove('active');
+    });
+
+    // Show active pane
+    const activePane = document.getElementById(`pane-${tabId}`);
+    if (activePane) {
+      activePane.classList.remove('d-none');
+    }
+
+    // Highlight sidebar items
+    const navItem = document.querySelector(`.sidebar-nav-item[data-tab="${tabId}"]`);
