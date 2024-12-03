@@ -490,3 +490,58 @@ export const PlayerUI = {
 
     // Highlight sidebar items
     const navItem = document.querySelector(`.sidebar-nav-item[data-tab="${tabId}"]`);
+    if (navItem) {
+      navItem.classList.add('active');
+    }
+
+    // Custom tab lifecycle actions
+    if (tabId === 'home') {
+      this.renderHome();
+    } else if (tabId === 'songs') {
+      this.renderSongsTable();
+    } else if (tabId === 'playlists') {
+      this.renderPlaylists();
+    } else if (tabId === 'playlist-detail' && data) {
+      this.renderPlaylistDetail(data);
+    } else if (tabId === 'settings') {
+      this.renderSettings();
+    } else if (tabId === 'artist-detail' && data) {
+      this.renderArtistDetail(data);
+    } else if (tabId === 'album-detail' && data) {
+      this.renderAlbumDetail(data);
+    }
+
+    // Handle full screen visualizer active loop
+    if (tabId === 'visualizers') {
+      Visualizer.resize();
+      if (this.isPlaying) Visualizer.start();
+    } else {
+      // If we are playing, visualizer runs in small bar backgrounds, but we can resize canvas
+    }
+  },
+
+  renderHome() {
+    const greetingEl = document.getElementById('home-greeting');
+    if (greetingEl) {
+      const hour = new Date().getHours();
+      let greeting = 'Good Evening';
+      if (hour < 12) greeting = 'Good Morning';
+      else if (hour < 18) greeting = 'Good Afternoon';
+      greetingEl.textContent = `${greeting}, Music Lover`;
+    }
+
+    // Render Quick Picks (first 4 tracks)
+    const quickPicksContainer = document.getElementById('home-quick-picks');
+    if (quickPicksContainer) {
+      quickPicksContainer.innerHTML = '';
+      const picks = this.tracks.slice(0, 4);
+
+      picks.forEach(track => {
+        const item = document.createElement('div');
+        item.classList.add('quick-pick-item', 'glass-card', 'd-flex', 'align-items-center', 'p-2');
+        item.dataset.trackId = track.id;
+        
+        let coverHtml = '';
+        if (track.isProcedural) {
+          coverHtml = `<div class="quick-cover-gradient" style="background: ${track.coverGradient}"></div>`;
+        } else if (track.coverBlob) {
