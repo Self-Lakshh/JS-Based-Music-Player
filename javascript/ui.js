@@ -545,3 +545,58 @@ export const PlayerUI = {
         if (track.isProcedural) {
           coverHtml = `<div class="quick-cover-gradient" style="background: ${track.coverGradient}"></div>`;
         } else if (track.coverBlob) {
+          coverHtml = `<img src="${URL.createObjectURL(track.coverBlob)}" alt="${track.title}" class="quick-cover-img" />`;
+        } else {
+          coverHtml = `<img src="assets/orange_logo.png" alt="${track.title}" class="quick-cover-img" style="filter: grayscale(1);" />`;
+        }
+
+        item.innerHTML = `
+          ${coverHtml}
+          <div class="flex-grow-1 ms-3 text-truncate">
+            <h6 class="mb-0 text-white text-truncate text-capitalize font-gilroy-bold">${track.title}</h6>
+            <small class="text-white-50 text-truncate">${track.artist}</small>
+          </div>
+          <button class="btn btn-outline-light btn-sm rounded-circle play-track-btn" data-track-id="${track.id}">▶</button>
+        `;
+        quickPicksContainer.appendChild(item);
+      });
+    }
+
+    // Render Recently Played
+    const recentContainer = document.getElementById('home-recently-played');
+    if (recentContainer) {
+      recentContainer.innerHTML = '';
+      const history = Database.getHistory();
+      
+      if (history.length === 0) {
+        recentContainer.innerHTML = `
+          <div class="col-12 py-4 text-center text-white-50 glass-card">
+            <p class="mb-0">No playback history yet. Start listening to see your history!</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Render max 6 items
+      history.slice(0, 6).forEach(histItem => {
+        const track = this.tracks.find(t => String(t.id) === String(histItem.trackId));
+        if (!track) return;
+
+        const col = document.createElement('div');
+        col.classList.add('col-6', 'col-md-4', 'col-lg-2', 'mb-3');
+        
+        let coverHtml = '';
+        if (track.isProcedural) {
+          coverHtml = `<div class="album-card-gradient" style="background: ${track.coverGradient}"></div>`;
+        } else if (track.coverBlob) {
+          coverHtml = `<img src="${URL.createObjectURL(track.coverBlob)}" alt="${track.title}" class="album-card-img" />`;
+        } else {
+          coverHtml = `<img src="assets/orange_logo.png" alt="${track.title}" class="album-card-img" style="filter: grayscale(1);" />`;
+        }
+
+        col.innerHTML = `
+          <div class="album-card glass-card text-center p-3 h-100" data-track-id="${track.id}">
+            <div class="album-card-cover-container mb-3 position-relative">
+              ${coverHtml}
+              <div class="album-card-overlay d-flex align-items-center justify-content-center">
+                <button class="btn btn-primary play-btn-card rounded-circle" data-track-id="${track.id}">▶</button>
