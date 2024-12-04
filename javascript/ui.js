@@ -600,3 +600,57 @@ export const PlayerUI = {
               ${coverHtml}
               <div class="album-card-overlay d-flex align-items-center justify-content-center">
                 <button class="btn btn-primary play-btn-card rounded-circle" data-track-id="${track.id}">▶</button>
+              </div>
+            </div>
+            <h6 class="text-white text-truncate mb-1 font-gilroy-bold text-capitalize">${track.title}</h6>
+            <p class="text-white-50 text-truncate small mb-0">${track.artist}</p>
+          </div>
+        `;
+        recentContainer.appendChild(col);
+      });
+    }
+
+    // Render Home Artists Circles
+    const artistContainer = document.getElementById('home-featured-artists');
+    if (artistContainer) {
+      artistContainer.innerHTML = '';
+      
+      // Get unique artists
+      const uniqueArtists = [...new Set(this.tracks.map(t => t.artist))].slice(0, 5);
+      uniqueArtists.forEach(artist => {
+        const col = document.createElement('div');
+        col.classList.add('col-4', 'col-md-2', 'text-center', 'mb-3');
+        col.innerHTML = `
+          <div class="artist-circle-card cursor-pointer" data-artist-name="${artist}">
+            <div class="artist-avatar mx-auto mb-2 d-flex align-items-center justify-content-center text-white font-gilroy-bold">
+              ${artist[0].toUpperCase()}
+            </div>
+            <h6 class="text-white text-truncate small mb-0">${artist}</h6>
+          </div>
+        `;
+        artistContainer.appendChild(col);
+      });
+    }
+
+    // Render Home Albums
+    const albumContainer = document.getElementById('home-featured-albums');
+    if (albumContainer) {
+      albumContainer.innerHTML = '';
+      const uniqueAlbums = [];
+      this.tracks.forEach(track => {
+        if (!uniqueAlbums.some(a => a.name === track.album && a.artist === track.artist)) {
+          uniqueAlbums.push({ name: track.album, artist: track.artist, trackId: track.id, isProcedural: track.isProcedural, coverGradient: track.coverGradient, coverBlob: track.coverBlob });
+        }
+      });
+
+      uniqueAlbums.slice(0, 4).forEach(album => {
+        const col = document.createElement('div');
+        col.classList.add('col-6', 'col-md-3', 'mb-3');
+
+        let coverHtml = '';
+        if (album.isProcedural) {
+          coverHtml = `<div class="album-card-gradient" style="background: ${album.coverGradient}"></div>`;
+        } else if (album.coverBlob) {
+          coverHtml = `<img src="${URL.createObjectURL(album.coverBlob)}" alt="${album.name}" class="album-card-img" />`;
+        } else {
+          coverHtml = `<img src="assets/orange_logo.png" alt="${album.name}" class="album-card-img" style="filter: grayscale(1);" />`;
