@@ -654,3 +654,58 @@ export const PlayerUI = {
           coverHtml = `<img src="${URL.createObjectURL(album.coverBlob)}" alt="${album.name}" class="album-card-img" />`;
         } else {
           coverHtml = `<img src="assets/orange_logo.png" alt="${album.name}" class="album-card-img" style="filter: grayscale(1);" />`;
+        }
+
+        col.innerHTML = `
+          <div class="album-card glass-card text-center p-3 h-100" data-album-name="${album.name}" data-artist-name="${album.artist}">
+            <div class="album-card-cover-container mb-3 position-relative">
+              ${coverHtml}
+              <div class="album-card-overlay d-flex align-items-center justify-content-center">
+                <button class="btn btn-secondary rounded-circle view-album-btn" data-album-name="${album.name}" data-artist-name="${album.artist}">👁</button>
+              </div>
+            </div>
+            <h6 class="text-white text-truncate mb-1 font-gilroy-bold">${album.name}</h6>
+            <p class="text-white-50 text-truncate small mb-0">${album.artist}</p>
+          </div>
+        `;
+        albumContainer.appendChild(col);
+      });
+    }
+  },
+
+  renderSongsTable(filterText = '') {
+    const tableBody = document.getElementById('songs-table-body');
+    if (!tableBody) return;
+
+    tableBody.innerHTML = '';
+
+    // Filter tracks
+    const filtered = this.tracks.filter(track => {
+      const matchText = filterText.toLowerCase();
+      return track.title.toLowerCase().includes(matchText) ||
+             track.artist.toLowerCase().includes(matchText) ||
+             track.album.toLowerCase().includes(matchText);
+    });
+
+    if (filtered.length === 0) {
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="5" class="text-center py-4 text-white-50">
+            No tracks found matching your query. Drag and drop MP3s to add!
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    filtered.forEach((track, index) => {
+      const row = document.createElement('tr');
+      row.dataset.trackId = track.id;
+      if (this.currentTrack && String(this.currentTrack.id) === String(track.id)) {
+        row.classList.add('playing-row');
+      }
+
+      const formatSecs = (secs) => {
+        const m = Math.floor(secs / 60);
+        const s = Math.floor(secs % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
