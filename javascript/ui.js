@@ -709,3 +709,58 @@ export const PlayerUI = {
         const m = Math.floor(secs / 60);
         const s = Math.floor(secs % 60).toString().padStart(2, '0');
         return `${m}:${s}`;
+      };
+
+      const isFav = Database.isFavorite(track.id);
+      const rowNum = index + 1;
+
+      row.innerHTML = `
+        <td class="text-white-50 width-row-num">${rowNum}</td>
+        <td>
+          <div class="d-flex align-items-center">
+            <div class="song-table-cover me-3">
+              ${track.isProcedural 
+                ? `<div class="table-cover-gradient" style="background: ${track.coverGradient}"></div>`
+                : (track.coverBlob 
+                    ? `<img src="${URL.createObjectURL(track.coverBlob)}" alt="${track.title}" />`
+                    : `<img src="assets/orange_logo.png" style="filter: grayscale(1);" />`
+                  )
+              }
+            </div>
+            <div class="text-truncate">
+              <span class="text-white font-gilroy-bold d-block text-capitalize cursor-pointer play-row-title">${track.title}</span>
+              <span class="text-white-50 small cursor-pointer hover-link view-row-artist">${track.artist}</span>
+            </div>
+          </div>
+        </td>
+        <td><span class="text-white-50 cursor-pointer hover-link view-row-album">${track.album}</span></td>
+        <td class="text-white-50">${formatSecs(track.duration)}</td>
+        <td>
+          <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-link text-white-50 fav-row-btn ${isFav ? 'active text-danger' : ''}">${isFav ? '♥' : '♡'}</button>
+            <div class="dropdown">
+              <button class="btn btn-link text-white-50 dropdown-toggle no-caret" data-bs-toggle="dropdown">⋮</button>
+              <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                <li><a class="dropdown-item add-to-queue-item" href="#">Add to Queue</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li class="dropdown-header">Add to Playlist</li>
+                ${Database.getPlaylists().filter(p => !p.isSystem).map(p => `
+                  <li><a class="dropdown-item add-to-playlist-item" data-playlist-id="${p.id}" href="#">${p.name}</a></li>
+                `).join('')}
+                ${Database.getPlaylists().filter(p => !p.isSystem).length === 0 ? '<li><a class="dropdown-item disabled" href="#">No playlists</a></li>' : ''}
+                ${!track.isProcedural ? `
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item text-danger delete-track-item" href="#">Delete Track</a></li>
+                ` : ''}
+              </ul>
+            </div>
+          </div>
+        </td>
+      `;
+
+      // Event handlers inside row
+      row.querySelector('.play-row-title').addEventListener('click', () => {
+        // Set queue to filtered list and play
+        const qIds = filtered.map(t => t.id);
+        const qIdx = qIds.indexOf(track.id);
+        this.setQueue(qIds, qIdx);
