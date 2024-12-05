@@ -1092,3 +1092,58 @@ export const PlayerUI = {
         const formatSecs = (secs) => {
           const m = Math.floor(secs / 60);
           const s = Math.floor(secs % 60).toString().padStart(2, '0');
+          return `${m}:${s}`;
+        };
+
+        row.innerHTML = `
+          <td class="text-white-50">${index + 1}</td>
+          <td>
+            <span class="text-white font-gilroy-bold cursor-pointer play-album-song-title text-capitalize">${track.title}</span>
+          </td>
+          <td class="text-white-50">${formatSecs(track.duration)}</td>
+        `;
+
+        row.querySelector('.play-album-song-title').addEventListener('click', () => {
+          const qIds = albumTracks.map(t => t.id);
+          const qIdx = qIds.indexOf(track.id);
+          this.setQueue(qIds, qIdx);
+        });
+
+        tracksTable.appendChild(row);
+      });
+    }
+  },
+
+  renderSettings() {
+    const settings = Database.getSettings();
+
+    // Set Slider positions
+    const eqSliders = document.querySelectorAll('.eq-slider');
+    eqSliders.forEach((slider, index) => {
+      if (settings.equalizer && settings.equalizer[index] !== undefined) {
+        slider.value = settings.equalizer[index];
+      }
+    });
+
+    // Spatializer toggle
+    const spatBtn = document.getElementById('settings-spatial-toggle');
+    if (spatBtn) {
+      spatBtn.checked = settings.spatializer || false;
+    }
+
+    // Playback Speed Selector
+    const speedSelect = document.getElementById('settings-speed-select');
+    if (speedSelect) {
+      speedSelect.value = (settings.speed || 1.0).toString();
+    }
+  },
+
+  updateQueueUI() {
+    const container = document.getElementById('queue-list-container');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    if (this.currentQueue.length === 0) {
+      container.innerHTML = `<div class="p-3 text-center text-white-50 small">Queue is empty</div>`;
+      return;
