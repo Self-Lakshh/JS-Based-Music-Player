@@ -1037,3 +1037,58 @@ export const PlayerUI = {
           const m = Math.floor(secs / 60);
           const s = Math.floor(secs % 60).toString().padStart(2, '0');
           return `${m}:${s}`;
+        };
+
+        row.innerHTML = `
+          <td class="text-white-50">${index + 1}</td>
+          <td>
+            <span class="text-white font-gilroy-bold cursor-pointer play-artist-song-title text-capitalize">${track.title}</span>
+          </td>
+          <td class="text-white-50">${track.album}</td>
+          <td class="text-white-50">${formatSecs(track.duration)}</td>
+        `;
+
+        row.querySelector('.play-artist-song-title').addEventListener('click', () => {
+          const qIds = artistTracks.map(t => t.id);
+          const qIdx = qIds.indexOf(track.id);
+          this.setQueue(qIds, qIdx);
+        });
+
+        popularTable.appendChild(row);
+      });
+    }
+  },
+
+  renderAlbumDetail(albumData) {
+    const bannerName = document.getElementById('album-detail-name');
+    const bannerArtist = document.getElementById('album-detail-artist');
+    const tracksTable = document.getElementById('album-songs-table-body');
+
+    if (bannerName) bannerName.textContent = albumData.name;
+    if (bannerArtist) bannerArtist.textContent = albumData.artist;
+
+    if (tracksTable) {
+      tracksTable.innerHTML = '';
+      const albumTracks = this.tracks.filter(t => t.album === albumData.name && t.artist === albumData.artist);
+
+      if (albumTracks.length === 0) {
+        tracksTable.innerHTML = `
+          <tr>
+            <td colspan="3" class="text-center py-4 text-white-50">
+              No tracks in this album.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      albumTracks.forEach((track, index) => {
+        const row = document.createElement('tr');
+        row.dataset.trackId = track.id;
+        if (this.currentTrack && String(this.currentTrack.id) === String(track.id)) {
+          row.classList.add('playing-row');
+        }
+
+        const formatSecs = (secs) => {
+          const m = Math.floor(secs / 60);
+          const s = Math.floor(secs % 60).toString().padStart(2, '0');
