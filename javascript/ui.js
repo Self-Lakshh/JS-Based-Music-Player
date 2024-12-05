@@ -819,3 +819,57 @@ export const PlayerUI = {
           }
         });
       }
+
+      tableBody.appendChild(row);
+    });
+  },
+
+  renderPlaylists() {
+    const listContainer = document.getElementById('playlists-container');
+    if (!listContainer) return;
+
+    listContainer.innerHTML = '';
+    const playlists = Database.getPlaylists();
+
+    playlists.forEach(pl => {
+      const col = document.createElement('div');
+      col.classList.add('col-6', 'col-md-4', 'col-lg-3', 'mb-4');
+
+      col.innerHTML = `
+        <div class="playlist-card glass-card text-center p-3 h-100 cursor-pointer" data-playlist-id="${pl.id}">
+          <div class="playlist-cover-gradient mb-3" style="background: ${pl.coverGradient || 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)'}">
+            <span class="playlist-cover-letters">${pl.name.slice(0, 2).toUpperCase()}</span>
+          </div>
+          <h5 class="text-white text-truncate font-gilroy-bold mb-1">${pl.name}</h5>
+          <p class="text-white-50 text-truncate small mb-2">${pl.tracks.length} tracks</p>
+          ${!pl.isSystem ? `<button class="btn btn-outline-danger btn-sm delete-pl-btn" data-playlist-id="${pl.id}">Delete</button>` : ''}
+        </div>
+      `;
+
+      col.querySelector('.playlist-card').addEventListener('click', (e) => {
+        if (e.target.classList.contains('delete-pl-btn')) return;
+        this.switchTab('playlist-detail', pl.id);
+      });
+
+      const delBtn = col.querySelector('.delete-pl-btn');
+      if (delBtn) {
+        delBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (confirm(`Delete playlist "${pl.name}"?`)) {
+            Database.deletePlaylist(pl.id);
+            this.renderPlaylists();
+          }
+        });
+      }
+
+      listContainer.appendChild(col);
+    });
+  },
+
+  renderPlaylistDetail(playlistId) {
+    const pl = Database.getPlaylists().find(p => p.id === playlistId);
+    if (!pl) return;
+
+    this.selectedPlaylistId = playlistId;
+
+    const bannerName = document.getElementById('playlist-detail-name');
