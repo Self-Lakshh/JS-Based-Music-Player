@@ -983,3 +983,57 @@ export const PlayerUI = {
       });
 
       tableBody.appendChild(row);
+    });
+
+    // Play playlist button action
+    const playPlBtn = document.getElementById('play-playlist-detail-btn');
+    if (playPlBtn) {
+      // Clear previous listeners
+      const newPlayPlBtn = playPlBtn.cloneNode(true);
+      playPlBtn.parentNode.replaceChild(newPlayPlBtn, playPlBtn);
+
+      newPlayPlBtn.addEventListener('click', () => {
+        const qIds = playlistTracks.map(t => t.id);
+        if (qIds.length > 0) {
+          this.setQueue(qIds, 0);
+        }
+      });
+    }
+  },
+
+  renderArtistDetail(artistName) {
+    const bannerName = document.getElementById('artist-detail-name');
+    const bannerBio = document.getElementById('artist-detail-bio');
+    const popularTable = document.getElementById('artist-songs-table-body');
+
+    if (bannerName) bannerName.textContent = artistName;
+    if (bannerBio) {
+      bannerBio.textContent = `Premium artist discovery page for ${artistName}. Enjoy all their synthesized tracks and imported albums.`;
+    }
+
+    if (popularTable) {
+      popularTable.innerHTML = '';
+      const artistTracks = this.tracks.filter(t => t.artist === artistName);
+
+      if (artistTracks.length === 0) {
+        popularTable.innerHTML = `
+          <tr>
+            <td colspan="4" class="text-center py-4 text-white-50">
+              No tracks for this artist.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      artistTracks.forEach((track, index) => {
+        const row = document.createElement('tr');
+        row.dataset.trackId = track.id;
+        if (this.currentTrack && String(this.currentTrack.id) === String(track.id)) {
+          row.classList.add('playing-row');
+        }
+
+        const formatSecs = (secs) => {
+          const m = Math.floor(secs / 60);
+          const s = Math.floor(secs % 60).toString().padStart(2, '0');
+          return `${m}:${s}`;
