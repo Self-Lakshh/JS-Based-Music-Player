@@ -928,3 +928,58 @@ export const PlayerUI = {
                     : `<img src="assets/orange_logo.png" style="filter: grayscale(1);" />`
                   )
               }
+            </div>
+            <div>
+              <span class="text-white font-gilroy-bold d-block text-capitalize cursor-pointer play-pl-row-title">${track.title}</span>
+              <span class="text-white-50 small">${track.artist}</span>
+            </div>
+          </div>
+        </td>
+        <td class="text-white-50">${track.album}</td>
+        <td class="text-white-50">${formatSecs(track.duration)}</td>
+        <td>
+          <button class="btn btn-link text-white-50 remove-pl-row-btn">✕</button>
+        </td>
+      `;
+
+      row.querySelector('.play-pl-row-title').addEventListener('click', () => {
+        const qIds = playlistTracks.map(t => t.id);
+        const qIdx = qIds.indexOf(track.id);
+        this.setQueue(qIds, qIdx);
+      });
+
+      row.querySelector('.remove-pl-row-btn').addEventListener('click', () => {
+        Database.removeTrackFromPlaylist(playlistId, track.id);
+        this.renderPlaylistDetail(playlistId);
+      });
+
+      // DRAG AND DROP HANDLERS
+      row.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', index);
+        row.classList.add('dragging');
+      });
+
+      row.addEventListener('dragend', () => {
+        row.classList.remove('dragging');
+      });
+
+      row.addEventListener('dragover', (e) => {
+        e.preventDefault();
+      });
+
+      row.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const fromIndex = parseInt(e.dataTransfer.getData('text/plain'), 10);
+        const toIndex = index;
+
+        if (fromIndex !== toIndex) {
+          const trackIds = [...pl.tracks];
+          const [movedId] = trackIds.splice(fromIndex, 1);
+          trackIds.splice(toIndex, 0, movedId);
+          
+          Database.reorderPlaylistTracks(playlistId, trackIds);
+          this.renderPlaylistDetail(playlistId);
+        }
+      });
+
+      tableBody.appendChild(row);
