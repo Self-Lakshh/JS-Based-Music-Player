@@ -873,3 +873,58 @@ export const PlayerUI = {
     this.selectedPlaylistId = playlistId;
 
     const bannerName = document.getElementById('playlist-detail-name');
+    const bannerDesc = document.getElementById('playlist-detail-desc');
+    const bannerCount = document.getElementById('playlist-detail-count');
+    const bannerCover = document.getElementById('playlist-detail-cover');
+
+    if (bannerName) bannerName.textContent = pl.name;
+    if (bannerDesc) bannerDesc.textContent = pl.description || 'No description provided.';
+    if (bannerCount) bannerCount.textContent = `${pl.tracks.length} tracks`;
+    if (bannerCover) {
+      bannerCover.style.background = pl.coverGradient || 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)';
+      bannerCover.innerHTML = `<span class="detail-cover-text">${pl.name.slice(0, 2).toUpperCase()}</span>`;
+    }
+
+    const tableBody = document.getElementById('playlist-songs-table-body');
+    if (!tableBody) return;
+    tableBody.innerHTML = '';
+
+    const playlistTracks = this.tracks.filter(t => pl.tracks.map(String).includes(String(t.id)));
+
+    if (playlistTracks.length === 0) {
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="5" class="text-center py-4 text-white-50">
+            No tracks in this playlist yet. Add tracks from the Songs list!
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    playlistTracks.forEach((track, index) => {
+      const row = document.createElement('tr');
+      row.dataset.trackId = track.id;
+      row.draggable = true; // Drag and drop reordering
+      if (this.currentTrack && String(this.currentTrack.id) === String(track.id)) {
+        row.classList.add('playing-row');
+      }
+
+      const formatSecs = (secs) => {
+        const m = Math.floor(secs / 60);
+        const s = Math.floor(secs % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
+      };
+
+      row.innerHTML = `
+        <td class="text-white-50 drag-handle" style="cursor: move;">☰</td>
+        <td>
+          <div class="d-flex align-items-center">
+            <div class="song-table-cover me-3">
+              ${track.isProcedural 
+                ? `<div class="table-cover-gradient" style="background: ${track.coverGradient}"></div>`
+                : (track.coverBlob 
+                    ? `<img src="${URL.createObjectURL(track.coverBlob)}" />`
+                    : `<img src="assets/orange_logo.png" style="filter: grayscale(1);" />`
+                  )
+              }
