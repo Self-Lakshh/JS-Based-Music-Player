@@ -1147,3 +1147,58 @@ export const PlayerUI = {
     if (this.currentQueue.length === 0) {
       container.innerHTML = `<div class="p-3 text-center text-white-50 small">Queue is empty</div>`;
       return;
+    }
+
+    this.currentQueue.forEach((trackId, index) => {
+      const track = this.tracks.find(t => String(t.id) === String(trackId));
+      if (!track) return;
+
+      const item = document.createElement('div');
+      item.classList.add('queue-item', 'd-flex', 'align-items-center', 'p-2');
+      if (index === this.queueIndex) {
+        item.classList.add('active');
+      }
+
+      item.innerHTML = `
+        <span class="text-white-50 small me-2 width-row-num">${index + 1}</span>
+        <div class="flex-grow-1 text-truncate">
+          <span class="text-white d-block text-capitalize font-gilroy-bold text-truncate small">${track.title}</span>
+          <span class="text-white-50 text-truncate x-small">${track.artist}</span>
+        </div>
+        <button class="btn btn-link btn-sm text-white-50 remove-queue-btn">✕</button>
+      `;
+
+      item.addEventListener('click', (e) => {
+        if (e.target.classList.contains('remove-queue-btn')) return;
+        this.queueIndex = index;
+        this.playTrack(trackId);
+      });
+
+      item.querySelector('.remove-queue-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.currentQueue.splice(index, 1);
+        Database.saveQueue(this.currentQueue);
+        if (index === this.queueIndex) {
+          // Play next or stop
+          if (this.currentQueue.length > 0) {
+            this.queueIndex = Math.min(this.queueIndex, this.currentQueue.length - 1);
+            this.playTrack(this.currentQueue[this.queueIndex]);
+          } else {
+            this.queueIndex = -1;
+            AudioEngine.stop();
+            this.isPlaying = false;
+            this.updatePlayStateUI();
+          }
+        } else if (index < this.queueIndex) {
+          this.queueIndex--;
+        }
+        this.updateQueueUI();
+      });
+
+      container.appendChild(item);
+    });
+  },
+
+  // --- EVENTS & HANDLERS ---
+
+  setupEventListeners() {
