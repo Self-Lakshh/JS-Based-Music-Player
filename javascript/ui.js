@@ -764,3 +764,58 @@ export const PlayerUI = {
         const qIds = filtered.map(t => t.id);
         const qIdx = qIds.indexOf(track.id);
         this.setQueue(qIds, qIdx);
+      });
+
+      row.querySelector('.view-row-artist').addEventListener('click', () => {
+        this.switchTab('artist-detail', track.artist);
+      });
+
+      row.querySelector('.view-row-album').addEventListener('click', () => {
+        this.switchTab('album-detail', { name: track.album, artist: track.artist });
+      });
+
+      row.querySelector('.fav-row-btn').addEventListener('click', (e) => {
+        const heartBtn = e.target;
+        const activated = Database.toggleFavorite(track.id);
+        if (activated) {
+          heartBtn.innerHTML = '♥';
+          heartBtn.classList.add('active', 'text-danger');
+        } else {
+          heartBtn.innerHTML = '♡';
+          heartBtn.classList.remove('active', 'text-danger');
+        }
+        this.renderHome();
+      });
+
+      // Dropdown Actions
+      row.querySelector('.add-to-queue-item').addEventListener('click', (e) => {
+        e.preventDefault();
+        this.addToQueue(track.id);
+      });
+
+      row.querySelectorAll('.add-to-playlist-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.preventDefault();
+          const plId = item.dataset.playlistId;
+          const added = Database.addTrackToPlaylist(plId, track.id);
+          if (added) {
+            alert(`Added to playlist!`);
+          } else {
+            alert(`Song is already in playlist.`);
+          }
+        });
+      });
+
+      const delBtn = row.querySelector('.delete-track-item');
+      if (delBtn) {
+        delBtn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          if (confirm(`Are you sure you want to delete ${track.title}?`)) {
+            await Database.deleteTrackFromDB(track.id);
+            await this.refreshTracks();
+            this.renderSongsTable(filterText);
+            this.renderHome();
+            this.initQueue();
+          }
+        });
+      }
