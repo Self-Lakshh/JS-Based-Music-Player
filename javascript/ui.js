@@ -1202,3 +1202,57 @@ export const PlayerUI = {
   // --- EVENTS & HANDLERS ---
 
   setupEventListeners() {
+    // Sidebar Tabs
+    document.querySelectorAll('.sidebar-nav-item').forEach((item) => {
+      item.addEventListener('click', () => {
+        const tab = item.dataset.tab;
+        this.switchTab(tab);
+      });
+    });
+
+    // Bottom Player Controls
+    const playBtn = document.getElementById('player-play-btn');
+    if (playBtn) playBtn.addEventListener('click', () => this.togglePlayPause());
+
+    const nextBtn = document.getElementById('player-next-btn');
+    if (nextBtn) nextBtn.addEventListener('click', () => this.playNextTrack());
+
+    const prevBtn = document.getElementById('player-prev-btn');
+    if (prevBtn) prevBtn.addEventListener('click', () => this.playPreviousTrack());
+
+    const shuffleBtn = document.getElementById('player-shuffle-btn');
+    if (shuffleBtn) shuffleBtn.addEventListener('click', () => this.toggleShuffle());
+
+    const repeatBtn = document.getElementById('player-repeat-btn');
+    if (repeatBtn) repeatBtn.addEventListener('click', () => this.cycleRepeatMode());
+
+    const muteBtn = document.getElementById('player-mute-btn');
+    if (muteBtn) muteBtn.addEventListener('click', () => this.toggleMute());
+
+    // Volume Slider
+    const volumeSlider = document.getElementById('volume-slider');
+    if (volumeSlider) {
+      volumeSlider.addEventListener('input', (e) => {
+        const vol = parseFloat(e.target.value) / 100;
+        Database.saveSettings({ volume: vol });
+        AudioEngine.setVolume(this.isMuted ? 0 : vol);
+      });
+    }
+
+    // Playback Progress Bar Seeking
+    const progressBar = document.getElementById('player-progress-bar');
+    if (progressBar) {
+      progressBar.addEventListener('input', (e) => {
+        if (!this.currentTrack) return;
+        const pct = parseFloat(e.target.value);
+        const seekTime = (pct / 100) * this.currentTrack.duration;
+        AudioEngine.seek(seekTime, this.currentTrack.duration);
+      });
+    }
+
+    // Search bar filtering
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const filterVal = e.target.value;
+        // Auto navigate to songs library pane if searching
