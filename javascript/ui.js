@@ -1256,3 +1256,58 @@ export const PlayerUI = {
       searchInput.addEventListener('input', (e) => {
         const filterVal = e.target.value;
         // Auto navigate to songs library pane if searching
+        if (this.activeTab !== 'songs' && filterVal.trim() !== '') {
+          this.switchTab('songs');
+        }
+        this.renderSongsTable(filterVal);
+      });
+    }
+
+    // Player heart click
+    const playerHeart = document.getElementById('player-favorite-btn');
+    if (playerHeart) {
+      playerHeart.addEventListener('click', () => {
+        if (!this.currentTrack) return;
+        const active = Database.toggleFavorite(this.currentTrack.id);
+        if (active) {
+          playerHeart.innerHTML = '♥';
+          playerHeart.classList.add('active');
+        } else {
+          playerHeart.innerHTML = '♡';
+          playerHeart.classList.remove('active');
+        }
+        this.renderHome();
+        this.renderSongsTable();
+      });
+    }
+
+    // Theme selector click triggers
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const theme = btn.dataset.theme;
+        this.applyTheme(theme);
+      });
+    });
+
+    // Equalizer slider listeners
+    document.querySelectorAll('.eq-slider').forEach((slider, index) => {
+      slider.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        AudioEngine.setEqualizerBand(index, val);
+        
+        // Save to settings
+        const settings = Database.getSettings();
+        const eq = settings.equalizer || [0, 0, 0, 0, 0];
+        eq[index] = val;
+        Database.saveSettings({ equalizer: eq });
+      });
+    });
+
+    // Speed selector change listener
+    const speedSelect = document.getElementById('settings-speed-select');
+    if (speedSelect) {
+      speedSelect.addEventListener('change', (e) => {
+        const speed = parseFloat(e.target.value);
+        Database.saveSettings({ speed: speed });
+        AudioEngine.setPlaybackRate(speed);
+      });
