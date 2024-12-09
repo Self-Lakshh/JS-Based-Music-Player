@@ -1311,3 +1311,58 @@ export const PlayerUI = {
         Database.saveSettings({ speed: speed });
         AudioEngine.setPlaybackRate(speed);
       });
+    }
+
+    // Panner balance slider listener
+    const panSlider = document.getElementById('settings-pan-slider');
+    if (panSlider) {
+      panSlider.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        AudioEngine.setPan(val);
+      });
+    }
+
+    // Spatializer checkbox toggle
+    const spatialCheckbox = document.getElementById('settings-spatial-toggle');
+    if (spatialCheckbox) {
+      spatialCheckbox.addEventListener('change', (e) => {
+        const check = e.target.checked;
+        Database.saveSettings({ spatializer: check });
+        // Map balance to panner for mock spatial reverb panner ticks
+        if (check) {
+          AudioEngine.setPan(0.3); // Slight spatial panner offset
+        } else {
+          AudioEngine.setPan(0.0); // Reset center
+        }
+      });
+    }
+
+    // Modal Create Playlist Action
+    const savePlBtn = document.getElementById('save-playlist-modal-btn');
+    if (savePlBtn) {
+      savePlBtn.addEventListener('click', () => {
+        const nameInput = document.getElementById('modal-playlist-name');
+        const descInput = document.getElementById('modal-playlist-desc');
+        const gradientSelect = document.getElementById('modal-playlist-gradient');
+
+        const name = nameInput.value.trim();
+        const desc = descInput.value.trim();
+        const grad = gradientSelect.value;
+
+        if (name === '') {
+          alert('Playlist name is required.');
+          return;
+        }
+
+        Database.createPlaylist(name, desc, grad);
+        
+        // Reset modal fields
+        nameInput.value = '';
+        descInput.value = '';
+
+        // Close bootstrap modal programmatically
+        const modalEl = document.getElementById('createPlaylistModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+
+        this.renderPlaylists();
