@@ -1366,3 +1366,58 @@ export const PlayerUI = {
         if (modal) modal.hide();
 
         this.renderPlaylists();
+        this.renderSongsTable(); // Reload dropdown menus
+      });
+    }
+
+    // Upload files handler click
+    const importInput = document.getElementById('import-audio-input');
+    if (importInput) {
+      importInput.addEventListener('change', async (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length > 0) {
+          await this.handleAudioUploads(files);
+        }
+      });
+    }
+
+    // Drag and drop local upload handlers on body
+    const dropZone = document.body;
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      // Show upload indicator if in songs view
+      const dragOverlay = document.getElementById('drag-upload-overlay');
+      if (dragOverlay) dragOverlay.classList.remove('d-none');
+    });
+
+    dropZone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      const dragOverlay = document.getElementById('drag-upload-overlay');
+      if (dragOverlay && (e.clientX === 0 && e.clientY === 0)) {
+        dragOverlay.classList.add('d-none');
+      }
+    });
+
+    dropZone.addEventListener('drop', async (e) => {
+      e.preventDefault();
+      const dragOverlay = document.getElementById('drag-upload-overlay');
+      if (dragOverlay) dragOverlay.classList.add('d-none');
+
+      const files = Array.from(e.dataTransfer.files);
+      const audioFiles = files.filter(f => f.type.startsWith('audio/') || f.name.endsWith('.mp3') || f.name.endsWith('.wav'));
+      
+      if (audioFiles.length > 0) {
+        await this.handleAudioUploads(audioFiles);
+      }
+    });
+
+    // Visualizer selection toggles
+    document.querySelectorAll('.viz-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const mode = btn.dataset.viz;
+        Visualizer.setMode(mode);
+
+        document.querySelectorAll('.viz-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
