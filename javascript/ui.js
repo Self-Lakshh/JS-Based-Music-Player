@@ -1421,3 +1421,57 @@ export const PlayerUI = {
         btn.classList.add('active');
       });
     });
+
+    // UI elements triggering Artist/Album transitions
+    document.addEventListener('click', (e) => {
+      const artistCard = e.target.closest('.artist-circle-card');
+      if (artistCard) {
+        const artName = artistCard.dataset.artistName;
+        this.switchTab('artist-detail', artName);
+        return;
+      }
+
+      const albumCard = e.target.closest('.album-card');
+      if (albumCard) {
+        const albName = albumCard.dataset.albumName;
+        const albArtist = albumCard.dataset.artistName;
+        this.switchTab('album-detail', { name: albName, artist: albArtist });
+        return;
+      }
+
+      const viewAlbumBtn = e.target.closest('.view-album-btn');
+      if (viewAlbumBtn) {
+        const name = viewAlbumBtn.dataset.albumName;
+        const artist = viewAlbumBtn.dataset.artistName;
+        this.switchTab('album-detail', { name, artist });
+      }
+    });
+
+    // Queue button drawer toggling
+    const queueBtn = document.getElementById('player-queue-toggle-btn');
+    const queueDrawer = document.getElementById('queue-drawer');
+    if (queueBtn && queueDrawer) {
+      queueBtn.addEventListener('click', () => {
+        queueDrawer.classList.toggle('open');
+        queueBtn.classList.toggle('active');
+      });
+    }
+
+    // Toggle fullscreen lyrics button
+    const lyricsToggleBtn = document.getElementById('player-lyrics-toggle-btn');
+    if (lyricsToggleBtn) {
+      lyricsToggleBtn.addEventListener('click', () => {
+        this.toggleLyricsView();
+      });
+    }
+
+    // Close buttons for fullscreen views
+    document.querySelectorAll('.close-fullscreen-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        this.closeImmersiveViews();
+      });
+    });
+
+    // Backup DB Button
+    const backupBtn = document.getElementById('settings-backup-btn');
+    if (backupBtn) {
