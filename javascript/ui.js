@@ -1475,3 +1475,58 @@ export const PlayerUI = {
     // Backup DB Button
     const backupBtn = document.getElementById('settings-backup-btn');
     if (backupBtn) {
+      backupBtn.addEventListener('click', () => {
+        this.backupSettingsAndPlaylists();
+      });
+    }
+
+    // Restore DB Button
+    const restoreBtn = document.getElementById('settings-restore-btn');
+    if (restoreBtn) {
+      restoreBtn.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          this.restoreSettingsAndPlaylists(file);
+        }
+      });
+    }
+  },
+
+  async handleAudioUploads(files) {
+    const uploadProgress = document.getElementById('upload-progress-card');
+    const uploadText = document.getElementById('upload-progress-text');
+    
+    if (uploadProgress && uploadText) {
+      uploadProgress.classList.remove('d-none');
+      uploadText.textContent = `Uploading 1 of ${files.length} files...`;
+    }
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (uploadText) {
+        uploadText.textContent = `Uploading ${i + 1} of ${files.length}: ${file.name}...`;
+      }
+
+      // Read duration and build basic title metadata
+      try {
+        const dur = await this.getFileDuration(file);
+        
+        // Simple name parser: e.g. "Alan Walker - Faded.mp3"
+        let artist = 'Unknown Artist';
+        let title = file.name.replace(/\.[^/.]+$/, "");
+        
+        if (title.includes('-')) {
+          const parts = title.split('-');
+          artist = parts[0].trim();
+          title = parts.slice(1).join('-').trim();
+        }
+
+        await Database.saveTrack(file, {
+          title,
+          artist,
+          album: 'Local Upload',
+          genre: 'Local',
+          duration: dur
+        });
+      } catch (err) {
+        console.error("Failed to parse/upload file:", file.name, err);
