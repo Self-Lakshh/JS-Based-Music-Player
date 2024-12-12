@@ -1585,3 +1585,58 @@ export const PlayerUI = {
     document.querySelectorAll('.viz-btn').forEach(btn => {
       if (btn.dataset.viz === nextMode) btn.classList.add('active');
       else btn.classList.remove('active');
+    });
+  },
+
+  closeImmersiveViews() {
+    const lView = document.getElementById('pane-lyrics-fullscreen');
+    const lyricsToggleBtn = document.getElementById('player-lyrics-toggle-btn');
+    if (lView) {
+      lView.classList.add('d-none');
+      if (lyricsToggleBtn) lyricsToggleBtn.classList.remove('active');
+    }
+
+    const queueDrawer = document.getElementById('queue-drawer');
+    const queueBtn = document.getElementById('player-queue-toggle-btn');
+    if (queueDrawer) {
+      queueDrawer.classList.remove('open');
+      if (queueBtn) queueBtn.classList.remove('active');
+    }
+  },
+
+  backupSettingsAndPlaylists() {
+    const data = {
+      settings: Database.getSettings(),
+      playlists: Database.getPlaylists(),
+      favorites: Database.getFavorites()
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `beatstream-backup-${Date.now()}.json`;
+    a.click();
+  },
+
+  restoreSettingsAndPlaylists(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (data.settings) Database.saveSettings(data.settings);
+        if (data.playlists) Database.savePlaylists(data.playlists);
+        if (data.favorites) {
+          localStorage.setItem('beatstream_favorites', JSON.stringify(data.favorites));
+        }
+        
+        alert('Restore successful! Reloading config...');
+        window.location.reload();
+      } catch (err) {
+        alert('Invalid backup file structure.');
+      }
+    };
+    reader.readAsText(file);
+  }
+};
+export default PlayerUI;
