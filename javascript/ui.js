@@ -1530,3 +1530,58 @@ export const PlayerUI = {
         });
       } catch (err) {
         console.error("Failed to parse/upload file:", file.name, err);
+      }
+    }
+
+    if (uploadProgress) {
+      uploadProgress.classList.add('d-none');
+    }
+
+    // Refresh and notify
+    await this.refreshTracks();
+    this.renderSongsTable();
+    this.renderHome();
+    alert(`Successfully loaded ${files.length} track(s) into your library!`);
+  },
+
+  getFileDuration(file) {
+    return new Promise((resolve) => {
+      const audio = document.createElement('audio');
+      audio.preload = 'metadata';
+      audio.src = URL.createObjectURL(file);
+      audio.onloadedmetadata = () => {
+        resolve(audio.duration || 180);
+      };
+      audio.onerror = () => {
+        resolve(180); // Default fallback duration
+      };
+    });
+  },
+
+  toggleLyricsView() {
+    const lView = document.getElementById('pane-lyrics-fullscreen');
+    const lyricsToggleBtn = document.getElementById('player-lyrics-toggle-btn');
+    
+    if (lView) {
+      const isOpen = !lView.classList.contains('d-none');
+      if (isOpen) {
+        lView.classList.add('d-none');
+        if (lyricsToggleBtn) lyricsToggleBtn.classList.remove('active');
+      } else {
+        lView.classList.remove('d-none');
+        if (lyricsToggleBtn) lyricsToggleBtn.classList.add('active');
+      }
+    }
+  },
+
+  cycleVisualizerMode() {
+    const modes = ['bars', 'wave', 'circle'];
+    const currentIdx = modes.indexOf(Visualizer.mode);
+    const nextIdx = (currentIdx + 1) % modes.length;
+    const nextMode = modes[nextIdx];
+    
+    Visualizer.setMode(nextMode);
+    
+    document.querySelectorAll('.viz-btn').forEach(btn => {
+      if (btn.dataset.viz === nextMode) btn.classList.add('active');
+      else btn.classList.remove('active');
