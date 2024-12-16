@@ -10,3 +10,9 @@ export const KeyboardShortcuts = {
   /**
    * Binds global window keydown events.
    * @param {Object} playerUIInstance Reference to the core UI controller containing control functions.
+   */
+  init(playerUIInstance) {
+    this.playerUI = playerUIInstance;
+
+    window.addEventListener('keydown', (event) => {
+      // Ignore key events if the user is typing in form elements
