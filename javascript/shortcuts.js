@@ -22,3 +22,9 @@ export const KeyboardShortcuts = {
                       activeEl.isContentEditable;
       
       if (isInput) return;
+
+      const key = event.key.toLowerCase();
+      const code = event.code;
+
+      switch (code) {
+        case 'Space':
