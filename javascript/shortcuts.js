@@ -16,3 +16,9 @@ export const KeyboardShortcuts = {
 
     window.addEventListener('keydown', (event) => {
       // Ignore key events if the user is typing in form elements
+      const activeEl = document.activeElement;
+      const isInput = activeEl.tagName === 'INPUT' || 
+                      activeEl.tagName === 'TEXTAREA' || 
+                      activeEl.isContentEditable;
+      
+      if (isInput) return;
