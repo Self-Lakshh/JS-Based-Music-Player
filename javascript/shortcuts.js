@@ -47,3 +47,9 @@ export const KeyboardShortcuts = {
           event.preventDefault();
           this.playerUI.adjustVolume(-0.05);
           break;
+      }
+
+      switch (key) {
+        case 'm':
+          this.playerUI.toggleMute();
+          break;
