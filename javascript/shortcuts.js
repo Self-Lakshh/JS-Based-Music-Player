@@ -28,3 +28,10 @@ export const KeyboardShortcuts = {
 
       switch (code) {
         case 'Space':
+          event.preventDefault();
+          this.playerUI.togglePlayPause();
+          break;
+        case 'ArrowRight':
+          event.preventDefault();
+          this.playerUI.seekForward(5);
+          break;
