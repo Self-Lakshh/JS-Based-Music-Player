@@ -35,3 +35,9 @@ export const KeyboardShortcuts = {
           event.preventDefault();
           this.playerUI.seekForward(5);
           break;
+        case 'ArrowLeft':
+          event.preventDefault();
+          this.playerUI.seekBackward(5);
+          break;
+        case 'ArrowUp':
+          event.preventDefault();
