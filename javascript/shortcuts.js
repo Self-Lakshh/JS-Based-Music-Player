@@ -41,3 +41,9 @@ export const KeyboardShortcuts = {
           break;
         case 'ArrowUp':
           event.preventDefault();
+          this.playerUI.adjustVolume(0.05);
+          break;
+        case 'ArrowDown':
+          event.preventDefault();
+          this.playerUI.adjustVolume(-0.05);
+          break;
