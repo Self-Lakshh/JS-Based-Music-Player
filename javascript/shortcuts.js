@@ -65,3 +65,10 @@ export const KeyboardShortcuts = {
         case 'r':
           this.playerUI.cycleRepeatMode();
           break;
+        case 'escape':
+          this.playerUI.closeImmersiveViews();
+          break;
+      }
+    });
+  }
+};
