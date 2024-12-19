@@ -59,3 +59,9 @@ export const KeyboardShortcuts = {
         case 'v':
           this.playerUI.cycleVisualizerMode();
           break;
+        case 's':
+          this.playerUI.toggleShuffle();
+          break;
+        case 'r':
+          this.playerUI.cycleRepeatMode();
+          break;
