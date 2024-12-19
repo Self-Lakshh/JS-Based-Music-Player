@@ -53,3 +53,9 @@ export const KeyboardShortcuts = {
         case 'm':
           this.playerUI.toggleMute();
           break;
+        case 'l':
+          this.playerUI.toggleLyricsView();
+          break;
+        case 'v':
+          this.playerUI.cycleVisualizerMode();
+          break;
