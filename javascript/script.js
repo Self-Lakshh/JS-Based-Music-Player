@@ -12,3 +12,18 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     
+    queryInput.addEventListener("keypress", function (event) {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault(); 
+            sendMessage(); 
+        }
+    });
+
+    function sendMessage() {
+        var userQuery = queryInput.value.trim();
+        if (userQuery === "") return; 
+
+        
+        if (introSection) {
+            introSection.style.display = "none";
+        }
