@@ -27,3 +27,18 @@ document.addEventListener("DOMContentLoaded", function () {
         if (introSection) {
             introSection.style.display = "none";
         }
+
+        var mainArea = document.getElementById("chat-container");
+
+        
+        queryCount++;
+
+      
+        var userDiv = document.createElement("div");
+        userDiv.id = `query-${queryCount}`;
+        userDiv.classList.add("message-bubble", "user-message"); 
+        userDiv.textContent = userQuery;
+
+        mainArea.appendChild(userDiv);
+
+       
