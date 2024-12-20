@@ -42,3 +42,18 @@ document.addEventListener("DOMContentLoaded", function () {
         mainArea.appendChild(userDiv);
 
        
+        queryInput.value = "";
+
+       
+        mainArea.scrollTop = mainArea.scrollHeight;
+
+        setTimeout(function () {
+            getBotReply("This is a  response to: " + userQuery);
+        }, 1000);
+    }
+
+   
+    function getBotReply(replyText) {
+        var mainArea = document.getElementById("chat-container");
+
+        
