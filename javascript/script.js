@@ -57,3 +57,18 @@ document.addEventListener("DOMContentLoaded", function () {
         var mainArea = document.getElementById("chat-container");
 
         
+        queryCount++;
+
+      
+        var botDiv = document.createElement("div");
+        botDiv.id = `reply-${queryCount}`;
+        botDiv.classList.add("message-bubble", "bot-message"); 
+        botDiv.textContent = replyText;
+
+        
+        mainArea.appendChild(botDiv);
+
+        
+        mainArea.scrollTop = mainArea.scrollHeight;
+    }
+});
