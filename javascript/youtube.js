@@ -1,17 +1,15 @@
 /**
- * BeatStream YouTube / Invidious API Integration
- * Fetches search results and stream links directly from public Invidious instances.
+ * BeatStream YouTube / YouTube Music API Integration
+ * Fetches search results, audio streams, and official lyrics directly from public Piped / YouTube Music API instances.
  * Enables streaming and importing of any YouTube / YouTube Music track.
  */
 
 export const YouTubeService = {
   instances: [
-    'https://yewtu.be',
-    'https://invidious.flokinet.to',
-    'https://inv.tux.rs',
-    'https://invidious.projectsegfau.lt',
-    'https://invidious.lunar.icu',
-    'https://invidious.nerdvpn.de'
+    'https://pipedapi.kavin.rocks',
+    'https://api.piped.yt',
+    'https://piped-api.privacydev.net',
+    'https://piped-api.lunar.icu'
   ],
   currentInstanceIndex: 0,
 
@@ -21,61 +19,86 @@ export const YouTubeService = {
 
   rotateInstance() {
     this.currentInstanceIndex = (this.currentInstanceIndex + 1) % this.instances.length;
-    console.log(`Rotating Invidious API to: ${this.getActiveInstance()}`);
+    console.log(`Rotating Piped API instance to: ${this.getActiveInstance()}`);
   },
 
   async search(query, limit = 20) {
     let attempts = 0;
     while (attempts < this.instances.length) {
       const instance = this.getActiveInstance();
-      const url = `${instance}/api/v1/search?q=${encodeURIComponent(query)}&type=video`;
+      const url = `${instance}/music/search?q=${encodeURIComponent(query)}&filter=songs`;
       try {
         const response = await fetch(url, { signal: AbortSignal.timeout(6000) });
         if (!response.ok) throw new Error(`HTTP error ${response.status}`);
         const data = await response.json();
         
         // Filter and map results
-        return data
-          .filter(item => item.type === 'video')
-          .slice(0, limit)
-          .map(item => {
-            let cover = 'assets/orange_logo.png';
-            if (item.videoThumbnails && item.videoThumbnails.length > 0) {
-              const med = item.videoThumbnails.find(t => t.quality === 'medium' || t.quality === 'default');
-              cover = med ? med.url : item.videoThumbnails[0].url;
-            }
-            
-            // Normalize Invidious thumbnail URL to ensure it is absolute
-            if (cover.startsWith('/')) {
-              cover = `${instance}${cover}`;
-            }
-
-            return {
-              id: `yt-${item.videoId}`,
-              videoId: item.videoId,
-              title: item.title,
-              artist: item.author,
-              album: 'YouTube Music',
-              duration: item.lengthSeconds || 200,
-              genre: 'YouTube Stream',
-              isProcedural: false,
-              isYouTube: true,
-              coverUrl: cover,
-              coverGradient: 'linear-gradient(135deg, #FF0000 0%, #111111 100%)',
-              streamUrl: `${instance}/latest_version?id=${item.videoId}&itag=140`
-            };
-          });
+        return data.slice(0, limit).map(item => ({
+          id: `yt-${item.videoId}`,
+          videoId: item.videoId,
+          title: item.title,
+          artist: item.uploaderName || item.artist || 'Unknown Artist',
+          album: item.album || 'YouTube Music',
+          duration: item.duration || 200,
+          genre: 'YouTube Music',
+          isProcedural: false,
+          isYouTube: true,
+          coverUrl: item.thumbnail || 'assets/orange_logo.png',
+          coverGradient: 'linear-gradient(135deg, #FF0000 0%, #111111 100%)',
+          streamUrl: '' // Loaded dynamically when played to prevent link expiration
+        }));
       } catch (err) {
-        console.warn(`Search failed on ${instance}:`, err);
+        console.warn(`YouTube Music search failed on ${instance}:`, err);
         this.rotateInstance();
         attempts++;
       }
     }
-    throw new Error('All Invidious search instances failed.');
+    throw new Error('All Piped search instances failed.');
   },
 
-  getStreamUrl(videoId) {
-    const instance = this.getActiveInstance();
-    return `${instance}/latest_version?id=${videoId}&itag=140`;
+  async getStreamUrl(videoId) {
+    let attempts = 0;
+    while (attempts < this.instances.length) {
+      const instance = this.getActiveInstance();
+      const url = `${instance}/streams/${videoId}`;
+      try {
+        const response = await fetch(url, { signal: AbortSignal.timeout(6000) });
+        if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+        const data = await response.json();
+        
+        const audioStreams = data.audioStreams || [];
+        // Sort streams to find high quality m4a
+        const bestStream = audioStreams.find(s => s.mimeType.includes('audio/mp4')) || audioStreams[0];
+        if (!bestStream) throw new Error("No audio streams found");
+        
+        return bestStream.url;
+      } catch (err) {
+        console.warn(`Failed to fetch stream URL on ${instance}:`, err);
+        this.rotateInstance();
+        attempts++;
+      }
+    }
+    // Final fallback to Invidious direct stream link
+    return `https://yewtu.be/latest_version?id=${videoId}&itag=140`;
+  },
+
+  async getLyrics(videoId) {
+    let attempts = 0;
+    while (attempts < this.instances.length) {
+      const instance = this.getActiveInstance();
+      const url = `${instance}/lyrics?videoId=${videoId}`;
+      try {
+        const response = await fetch(url, { signal: AbortSignal.timeout(6000) });
+        if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+        const data = await response.json();
+        
+        return data.lyrics || null;
+      } catch (err) {
+        console.warn(`Failed to fetch lyrics on ${instance}:`, err);
+        this.rotateInstance();
+        attempts++;
+      }
+    }
+    return null;
   }
 };

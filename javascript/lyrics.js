@@ -388,8 +388,62 @@ export const LyricsEngine = {
     lines.push(`[${endMins}:${endSecs}.00] <${endMins}:${endSecs}.00> (Outro <${endMins}:${endSecs}.30> - <${endMins}:${endSecs}.60> Fade <${endMins}:${endSecs}.90> Out)`);
     
     return lines.join('\n');
-  }
-    
-    this.parse(lrc.trim());
+  },
+
+  loadYouTubeLyrics(trackId, title, artist, duration, rawLyrics) {
+    if (!rawLyrics) {
+      this.loadProceduralLyrics(trackId, title, artist, duration);
+      return;
+    }
+
+    if (rawLyrics.includes('[00:') || rawLyrics.includes('[01:')) {
+      this.parse(rawLyrics);
+      return;
+    }
+
+    const rawLines = rawLyrics.split('\n')
+      .map(line => line.trim())
+      .filter(line => line.length > 0);
+
+    if (rawLines.length === 0) {
+      this.loadProceduralLyrics(trackId, title, artist, duration);
+      return;
+    }
+
+    const linesCount = rawLines.length;
+    const startTime = 5;
+    const endTime = duration - 10;
+    const interval = (endTime - startTime) / Math.max(1, linesCount - 1);
+
+    const lrcLines = [];
+    lrcLines.push('[00:00.00] <00:00.00> (YouTube <00:01.00> Music <00:02.00> Lyrics <00:03.00> - <00:04.00> Timed <00:05.00> Fallback)');
+
+    rawLines.forEach((phrase, idx) => {
+      const curTime = startTime + idx * interval;
+      const minutes = Math.floor(curTime / 60).toString().padStart(2, '0');
+      const seconds = Math.floor(curTime % 60).toString().padStart(2, '0');
+      const timeStr = `${minutes}:${seconds}.00`;
+
+      const words = phrase.split(' ');
+      let wTime = curTime;
+      let wordTags = '';
+      const wordInterval = Math.min(0.6, interval / Math.max(1, words.length));
+      
+      words.forEach(w => {
+        const wMins = Math.floor(wTime / 60).toString().padStart(2, '0');
+        const wSecs = Math.floor(wTime % 60).toString().padStart(2, '0');
+        const wMs = Math.floor((wTime % 1) * 100).toString().padStart(2, '0');
+        wordTags += `<${wMins}:${wSecs}.${wMs}> ${w} `;
+        wTime += wordInterval;
+      });
+
+      lrcLines.push(`[${timeStr}] ${wordTags.trim()}`);
+    });
+
+    const endMins = Math.floor((duration - 5) / 60).toString().padStart(2, '0');
+    const endSecs = Math.floor((duration - 5) % 60).toString().padStart(2, '0');
+    lrcLines.push(`[${endMins}:${endSecs}.00] <${endMins}:${endSecs}.00> (Outro <${endMins}:${endSecs}.30> - <${endMins}:${endSecs}.60> Fade <${endMins}:${endSecs}.90> Out)`);
+
+    this.parse(lrcLines.join('\n'));
   }
 };

@@ -188,6 +188,15 @@ export const PlayerUI = {
     // Load Lyrics
     if (track.isProcedural) {
       LyricsEngine.loadProceduralLyrics(track.id, track.title, track.artist, track.duration);
+    } else if (track.isYouTube) {
+      try {
+        const { YouTubeService } = await import('./youtube.js');
+        const rawLyrics = await YouTubeService.getLyrics(track.videoId);
+        LyricsEngine.loadYouTubeLyrics(track.id, track.title, track.artist, track.duration, rawLyrics);
+      } catch (err) {
+        console.warn("Failed to fetch YouTube lyrics, using dynamic fallback:", err);
+        LyricsEngine.loadProceduralLyrics(track.id, track.title, track.artist, track.duration);
+      }
     } else {
       // Mock lyrics for local files based on title
       const mockLrc = `
@@ -227,7 +236,17 @@ export const PlayerUI = {
     // Start/Stop Audio Playback
     if (shouldPlay) {
       this.isPlayingSynthFallback = false;
-      if (track.streamUrl) {
+      if (track.isYouTube) {
+        try {
+          const { YouTubeService } = await import('./youtube.js');
+          const freshStreamUrl = await YouTubeService.getStreamUrl(track.videoId);
+          AudioEngine.playUrlTrack(freshStreamUrl, seekTime);
+        } catch (err) {
+          console.warn("Failed to retrieve YouTube stream URL, falling back to synth:", err);
+          this.isPlayingSynthFallback = true;
+          AudioEngine.playSynthTrack(track.id, seekTime, track.duration);
+        }
+      } else if (track.streamUrl) {
         AudioEngine.playUrlTrack(track.streamUrl, seekTime);
       } else if (track.isProcedural) {
         AudioEngine.playSynthTrack(track.id, seekTime, track.duration);
@@ -238,6 +257,16 @@ export const PlayerUI = {
           AudioEngine.playLocalTrack(dbRecord.audioBlob, seekTime);
         } else if (dbRecord && dbRecord.streamUrl) {
           AudioEngine.playUrlTrack(dbRecord.streamUrl, seekTime);
+        } else if (dbRecord && dbRecord.isYouTube) {
+          try {
+            const { YouTubeService } = await import('./youtube.js');
+            const freshStreamUrl = await YouTubeService.getStreamUrl(dbRecord.videoId);
+            AudioEngine.playUrlTrack(freshStreamUrl, seekTime);
+          } catch (err) {
+            console.warn("Failed to retrieve YouTube stream URL for DB record, falling back to synth:", err);
+            this.isPlayingSynthFallback = true;
+            AudioEngine.playSynthTrack(track.id, seekTime, track.duration);
+          }
         } else {
           console.warn("Could not find audio blob or stream URL, falling back to synth:", track.id);
           this.isPlayingSynthFallback = true;
@@ -752,7 +781,8 @@ export const PlayerUI = {
                 duration: track.duration,
                 coverUrl: track.coverUrl,
                 streamUrl: track.streamUrl,
-                isYouTube: true
+                isYouTube: true,
+                videoId: track.videoId
               });
 
               this.tracks.push(saved);

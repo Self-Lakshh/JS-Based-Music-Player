@@ -376,6 +376,7 @@ export const Database = {
         coverUrl: metadata.coverUrl || null,
         streamUrl: metadata.streamUrl || null,
         isYouTube: metadata.isYouTube || false,
+        videoId: metadata.videoId || null,
         addedAt: Date.now(),
         plays: 0
       };
