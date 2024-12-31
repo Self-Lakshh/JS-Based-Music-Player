@@ -128,6 +128,23 @@ export const PlayerUI = {
     const track = this.tracks.find(t => String(t.id) === String(id));
     if (!track) return;
 
+    // Resolve Bollywood seeds to real YouTube tracks dynamically on the fly
+    if (track.id && String(track.id).startsWith('bolly-') && !track.videoId) {
+      try {
+        const { YouTubeService } = await import('./youtube.js');
+        const results = await YouTubeService.search(`${track.title} ${track.artist}`, 1);
+        if (results && results.length > 0) {
+          track.videoId = results[0].videoId;
+          track.isYouTube = true;
+          if (results[0].coverUrl) {
+            track.coverUrl = results[0].coverUrl;
+          }
+        }
+      } catch (err) {
+        console.warn("Failed to resolve Bollywood track on YouTube:", err);
+      }
+    }
+
     this.currentTrack = track;
 
     // Add to history
@@ -1424,6 +1441,12 @@ export const PlayerUI = {
     if (speedSelect) {
       speedSelect.value = (settings.speed || 1.0).toString();
     }
+
+    // Populate YouTube API Key if it exists
+    const keyInput = document.getElementById('settings-api-key');
+    if (keyInput) {
+      keyInput.value = localStorage.getItem('BEATSTREAM_YT_API_KEY') || '';
+    }
   },
 
   updateQueueUI() {
@@ -1784,6 +1807,32 @@ export const PlayerUI = {
     if (backupBtn) {
       backupBtn.addEventListener('click', () => {
         this.backupSettingsAndPlaylists();
+      });
+    }
+
+    // Save YouTube API Key Button
+    const saveKeyBtn = document.getElementById('settings-save-key-btn');
+    const keyInput = document.getElementById('settings-api-key');
+    if (saveKeyBtn && keyInput) {
+      saveKeyBtn.addEventListener('click', () => {
+        const key = keyInput.value.trim();
+        if (key === '') {
+          localStorage.removeItem('BEATSTREAM_YT_API_KEY');
+          alert('API Key cleared. Using fallback public instances.');
+        } else {
+          localStorage.setItem('BEATSTREAM_YT_API_KEY', key);
+          alert('API Key saved successfully!');
+        }
+      });
+    }
+
+    // Click on player track info (metadata or album art) toggles fullscreen lyrics view
+    const trackInfo = document.querySelector('.player-track-info');
+    if (trackInfo) {
+      trackInfo.addEventListener('click', (e) => {
+        // Do not toggle if the user clicked the favorite heart button
+        if (e.target.closest('#player-favorite-btn')) return;
+        this.toggleLyricsView();
       });
     }
 
