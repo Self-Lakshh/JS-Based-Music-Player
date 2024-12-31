@@ -259,9 +259,13 @@ export const PlayerUI = {
           const freshStreamUrl = await YouTubeService.getStreamUrl(track.videoId);
           AudioEngine.playUrlTrack(freshStreamUrl, seekTime);
         } catch (err) {
-          console.warn("Failed to retrieve YouTube stream URL, falling back to synth:", err);
-          this.isPlayingSynthFallback = true;
-          AudioEngine.playSynthTrack(track.id, seekTime, track.duration);
+          console.warn("Failed to retrieve YouTube stream URL, falling back:", err);
+          if (track.streamUrl) {
+            AudioEngine.playUrlTrack(track.streamUrl, seekTime);
+          } else {
+            this.isPlayingSynthFallback = true;
+            AudioEngine.playSynthTrack(track.id, seekTime, track.duration);
+          }
         }
       } else if (track.streamUrl) {
         AudioEngine.playUrlTrack(track.streamUrl, seekTime);
@@ -280,9 +284,13 @@ export const PlayerUI = {
             const freshStreamUrl = await YouTubeService.getStreamUrl(dbRecord.videoId);
             AudioEngine.playUrlTrack(freshStreamUrl, seekTime);
           } catch (err) {
-            console.warn("Failed to retrieve YouTube stream URL for DB record, falling back to synth:", err);
-            this.isPlayingSynthFallback = true;
-            AudioEngine.playSynthTrack(track.id, seekTime, track.duration);
+            console.warn("Failed to retrieve YouTube stream URL for DB record, falling back:", err);
+            if (dbRecord.streamUrl) {
+              AudioEngine.playUrlTrack(dbRecord.streamUrl, seekTime);
+            } else {
+              this.isPlayingSynthFallback = true;
+              AudioEngine.playSynthTrack(track.id, seekTime, track.duration);
+            }
           }
         } else {
           console.warn("Could not find audio blob or stream URL, falling back to synth:", track.id);
@@ -729,6 +737,102 @@ export const PlayerUI = {
 
       discoverContainer.appendChild(col);
     });
+
+    // Render Popular Songs Table in Discover Tab
+    const discoverSongsTable = document.getElementById('discover-songs-table-body');
+    if (discoverSongsTable) {
+      discoverSongsTable.innerHTML = '';
+      // Show first 15 tracks (Bollywood seeds and synth tracks)
+      const songsToDisplay = this.tracks.filter(t => t.id.startsWith('bolly-') || t.id.startsWith('synth-')).slice(0, 15);
+      
+      songsToDisplay.forEach((track, index) => {
+        const row = document.createElement('tr');
+        row.dataset.trackId = track.id;
+        if (this.currentTrack && String(this.currentTrack.id) === String(track.id)) {
+          row.classList.add('playing-row');
+        }
+
+        const formatSecs = (secs) => {
+          const m = Math.floor(secs / 60);
+          const s = Math.floor(secs % 60).toString().padStart(2, '0');
+          return `${m}:${s}`;
+        };
+
+        const isFav = Database.isFavorite(track.id);
+        const rowNum = index + 1;
+
+        row.innerHTML = `
+          <td class="text-white-50 width-row-num">${rowNum}</td>
+          <td>
+            <div class="d-flex align-items-center">
+              <div class="song-table-cover me-3">
+                ${track.isProcedural 
+                  ? `<div class="table-cover-gradient" style="background: ${track.coverGradient}"></div>`
+                  : (track.coverBlob 
+                      ? `<img src="${URL.createObjectURL(track.coverBlob)}" alt="${track.title}" />`
+                      : `<img src="assets/orange_logo.png" style="filter: grayscale(1);" />`
+                    )
+                }
+              </div>
+              <div class="text-truncate">
+                <span class="text-white font-gilroy-bold d-block text-capitalize cursor-pointer play-discover-row-title">${track.title}</span>
+                <span class="text-white-50 small cursor-pointer hover-link view-discover-row-artist">${track.artist}</span>
+              </div>
+            </div>
+          </td>
+          <td><span class="text-white-50 cursor-pointer hover-link view-discover-row-album">${track.album}</span></td>
+          <td class="text-white-50">${formatSecs(track.duration)}</td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <button class="btn btn-link text-white-50 fav-discover-row-btn ${isFav ? 'active text-danger' : ''}">${isFav ? '♥' : '♡'}</button>
+              <div class="dropdown">
+                <button class="btn btn-link text-white-50 dropdown-toggle no-caret" data-bs-toggle="dropdown">⋮</button>
+                <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                  <li><a class="dropdown-item add-to-queue-item-discover" href="#">Add to Queue</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item disabled" href="#">Add to Playlist</a></li>
+                </ul>
+              </div>
+            </div>
+          </td>
+        `;
+
+        row.querySelector('.play-discover-row-title').addEventListener('click', () => {
+          const qIds = songsToDisplay.map(t => t.id);
+          const qIdx = qIds.indexOf(track.id);
+          this.setQueue(qIds, qIdx);
+        });
+
+        row.querySelector('.view-discover-row-artist').addEventListener('click', () => {
+          this.switchTab('artist-detail', track.artist);
+        });
+
+        row.querySelector('.view-discover-row-album').addEventListener('click', () => {
+          this.switchTab('album-detail', { name: track.album, artist: track.artist });
+        });
+
+        row.querySelector('.fav-discover-row-btn').addEventListener('click', (e) => {
+          const heartBtn = e.target;
+          const activated = Database.toggleFavorite(track.id);
+          if (activated) {
+            heartBtn.innerHTML = '♥';
+            heartBtn.classList.add('active', 'text-danger');
+          } else {
+            heartBtn.innerHTML = '♡';
+            heartBtn.classList.remove('active', 'text-danger');
+          }
+          this.renderHome();
+          this.renderSongsTable();
+        });
+
+        row.querySelector('.add-to-queue-item-discover').addEventListener('click', (e) => {
+          e.preventDefault();
+          this.addToQueue(track.id);
+        });
+
+        discoverSongsTable.appendChild(row);
+      });
+    }
   },
 
   async searchYouTubeAndRender(query) {
@@ -845,6 +949,7 @@ export const PlayerUI = {
         const item = document.createElement('div');
         item.classList.add('quick-pick-item', 'glass-card', 'd-flex', 'align-items-center', 'p-2');
         item.dataset.trackId = track.id;
+        item.style.cursor = 'pointer';
         
         let coverHtml = '';
         if (track.isProcedural) {
@@ -863,6 +968,13 @@ export const PlayerUI = {
           </div>
           <button class="btn btn-outline-light btn-sm rounded-circle play-track-btn" data-track-id="${track.id}">▶</button>
         `;
+
+        item.addEventListener('click', (e) => {
+          const qIds = picks.map(t => t.id);
+          const qIdx = qIds.indexOf(track.id);
+          this.setQueue(qIds, qIdx);
+        });
+
         quickPicksContainer.appendChild(item);
       });
     }
@@ -899,8 +1011,9 @@ export const PlayerUI = {
           coverHtml = `<img src="assets/orange_logo.png" alt="${track.title}" class="album-card-img" style="filter: grayscale(1);" />`;
         }
 
+        // Changed class from 'album-card' to 'recent-track-card' so it doesn't trigger the global album transition
         col.innerHTML = `
-          <div class="album-card glass-card text-center p-3 h-100" data-track-id="${track.id}">
+          <div class="recent-track-card glass-card text-center p-3 h-100 cursor-pointer" data-track-id="${track.id}">
             <div class="album-card-cover-container mb-3 position-relative">
               ${coverHtml}
               <div class="album-card-overlay d-flex align-items-center justify-content-center">
@@ -911,6 +1024,14 @@ export const PlayerUI = {
             <p class="text-white-50 text-truncate small mb-0">${track.artist}</p>
           </div>
         `;
+
+        const card = col.querySelector('.recent-track-card');
+        card.addEventListener('click', (e) => {
+          const qIds = history.map(h => h.trackId).filter(id => this.tracks.some(t => String(t.id) === String(id)));
+          const qIdx = qIds.indexOf(track.id);
+          this.setQueue(qIds, qIdx);
+        });
+
         recentContainer.appendChild(col);
       });
     }
