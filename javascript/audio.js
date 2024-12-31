@@ -16,6 +16,7 @@ export const AudioEngine = {
   // Event handlers
   onTimeUpdateCallback: null,
   onTrackEndedCallback: null,
+  onAudioErrorCallback: null,
 
   // Procedural Synth State
   isSynthPlaying: false,
@@ -91,6 +92,13 @@ export const AudioEngine = {
         this.onTrackEndedCallback();
       }
     });
+
+    this.audioEl.addEventListener('error', (e) => {
+      console.warn("Audio element error, triggering fallback:", e);
+      if (this.onAudioErrorCallback) {
+        this.onAudioErrorCallback();
+      }
+    });
   },
 
   resumeContext() {
@@ -108,6 +116,20 @@ export const AudioEngine = {
 
     const objectUrl = URL.createObjectURL(blob);
     this.audioEl.src = objectUrl;
+    this.audioEl.currentTime = seekTime;
+    
+    const playPromise = this.audioEl.play();
+    if (playPromise !== undefined) {
+      playPromise.catch((err) => console.warn("Audio play interrupted:", err));
+    }
+  },
+
+  playUrlTrack(url, seekTime = 0) {
+    this.init();
+    this.resumeContext();
+    this.stopSynth();
+
+    this.audioEl.src = url;
     this.audioEl.currentTime = seekTime;
     
     const playPromise = this.audioEl.play();

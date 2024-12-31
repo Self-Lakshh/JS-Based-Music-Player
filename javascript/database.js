@@ -85,15 +85,16 @@ const SEED_DATA = [
   ['bolly-65', 'Haule Haule', 'Sukhwinder Singh', 'Rab Ne Bana Di Jodi', 190, 'Romantic', 'linear-gradient(135deg, #e6b980 0%, #eacda3 100%)']
 ];
 
-export const BOLLYWOOD_SEEDS = SEED_DATA.map(item => ({
+export const BOLLYWOOD_SEEDS = SEED_DATA.map((item, index) => ({
   id: item[0],
   title: item[1],
   artist: item[2],
   album: item[3],
   duration: item[4],
   genre: item[5],
-  isProcedural: true,
-  coverGradient: item[6]
+  isProcedural: false,
+  coverGradient: item[6],
+  streamUrl: `https://www.soundhelix.com/examples/mp3/SoundHelix-Song-${(index % 16) + 1}.mp3`
 }));
 
 const DB_NAME = 'BeatStreamDB';
@@ -357,17 +358,24 @@ export const Database = {
   // --- INDEXEDDB TRACK STORAGE ---
   async saveTrack(audioFile, metadata = {}) {
     return new Promise((resolve, reject) => {
+      if (!this.db) {
+        reject(new Error("Database not initialized"));
+        return;
+      }
       const transaction = this.db.transaction([TRACK_STORE_NAME], 'readwrite');
       const store = transaction.objectStore(TRACK_STORE_NAME);
 
       const track = {
-        title: metadata.title || audioFile.name.replace(/\.[^/.]+$/, ""),
+        title: metadata.title || (audioFile ? audioFile.name.replace(/\.[^/.]+$/, "") : 'Unknown Track'),
         artist: metadata.artist || 'Unknown Artist',
         album: metadata.album || 'Single',
         genre: metadata.genre || 'Unknown',
         duration: metadata.duration || 0,
-        audioBlob: audioFile,
+        audioBlob: audioFile || null,
         coverBlob: metadata.coverBlob || null,
+        coverUrl: metadata.coverUrl || null,
+        streamUrl: metadata.streamUrl || null,
+        isYouTube: metadata.isYouTube || false,
         addedAt: Date.now(),
         plays: 0
       };

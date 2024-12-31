@@ -18,8 +18,9 @@ export const PlayerUI = {
   isPlaying: false,
   isMuted: false,
   previousVolume: 0.8,
-  activeTab: 'home',
+  activeTab: 'discover',
   selectedPlaylistId: null,
+  isPlayingSynthFallback: false,
 
   async init() {
     await Database.init();
@@ -51,8 +52,16 @@ export const PlayerUI = {
     // Connect audio callbacks
     AudioEngine.onTimeUpdateCallback = (current, duration) => this.updatePlaybackProgress(current, duration);
     AudioEngine.onTrackEndedCallback = () => this.handleTrackEnded();
+    AudioEngine.onAudioErrorCallback = () => {
+      if (this.currentTrack && !this.isPlayingSynthFallback) {
+        console.warn("Playback error on stream URL, falling back to procedural synthesizer.");
+        this.isPlayingSynthFallback = true;
+        AudioEngine.playSynthTrack(this.currentTrack.id, AudioEngine.audioEl.currentTime || 0, this.currentTrack.duration);
+      }
+    };
 
     // Initial UI Render
+    this.renderDiscover();
     this.renderHome();
     this.renderSongsTable();
     this.renderPlaylists();
@@ -143,13 +152,23 @@ export const PlayerUI = {
         coverGradientEl.style.background = track.coverGradient || 'linear-gradient(135deg, #00f2fe 0%, #4facfe 100%)';
       }
     } else {
-      if (coverGradientEl) coverGradientEl.classList.add('d-none');
-      if (coverEl) {
-        coverEl.classList.remove('d-none');
-        if (track.coverBlob) {
-          coverEl.src = URL.createObjectURL(track.coverBlob);
-        } else {
-          coverEl.src = 'assets/orange_logo.png'; // Fallback icon
+      if (track.coverGradient && !track.coverUrl && !track.coverBlob) {
+        if (coverEl) coverEl.classList.add('d-none');
+        if (coverGradientEl) {
+          coverGradientEl.classList.remove('d-none');
+          coverGradientEl.style.background = track.coverGradient;
+        }
+      } else {
+        if (coverGradientEl) coverGradientEl.classList.add('d-none');
+        if (coverEl) {
+          coverEl.classList.remove('d-none');
+          if (track.coverBlob) {
+            coverEl.src = URL.createObjectURL(track.coverBlob);
+          } else if (track.coverUrl) {
+            coverEl.src = track.coverUrl;
+          } else {
+            coverEl.src = 'assets/orange_logo.png'; // Fallback icon
+          }
         }
       }
     }
@@ -207,15 +226,22 @@ export const PlayerUI = {
 
     // Start/Stop Audio Playback
     if (shouldPlay) {
-      if (track.isProcedural) {
+      this.isPlayingSynthFallback = false;
+      if (track.streamUrl) {
+        AudioEngine.playUrlTrack(track.streamUrl, seekTime);
+      } else if (track.isProcedural) {
         AudioEngine.playSynthTrack(track.id, seekTime, track.duration);
       } else {
         // Retrieve IndexedDB blob
         const dbRecord = await Database.getTrack(track.id);
         if (dbRecord && dbRecord.audioBlob) {
           AudioEngine.playLocalTrack(dbRecord.audioBlob, seekTime);
+        } else if (dbRecord && dbRecord.streamUrl) {
+          AudioEngine.playUrlTrack(dbRecord.streamUrl, seekTime);
         } else {
-          console.error("Could not find audio blob for track", track.id);
+          console.warn("Could not find audio blob or stream URL, falling back to synth:", track.id);
+          this.isPlayingSynthFallback = true;
+          AudioEngine.playSynthTrack(track.id, seekTime, track.duration);
         }
       }
       this.isPlaying = true;
@@ -470,6 +496,15 @@ export const PlayerUI = {
   // --- PAGE RENDERING MODULES ---
 
   switchTab(tabId, data = null) {
+    if (tabId === 'favorites') {
+      tabId = 'playlist-detail';
+      data = 'favorites';
+    } else if (tabId === 'recently-played') {
+      tabId = 'home';
+    } else if (tabId === 'top-charts') {
+      tabId = 'discover';
+    }
+
     this.activeTab = tabId;
     
     // Hide all tab panes
@@ -495,7 +530,9 @@ export const PlayerUI = {
     }
 
     // Custom tab lifecycle actions
-    if (tabId === 'home') {
+    if (tabId === 'discover') {
+      this.renderDiscover();
+    } else if (tabId === 'home') {
       this.renderHome();
     } else if (tabId === 'songs') {
       this.renderSongsTable();
@@ -517,6 +554,227 @@ export const PlayerUI = {
       if (this.isPlaying) Visualizer.start();
     } else {
       // If we are playing, visualizer runs in small bar backgrounds, but we can resize canvas
+    }
+  },
+
+  renderDiscover() {
+    const discoverContainer = document.getElementById('discover-featured-albums');
+    if (!discoverContainer) return;
+
+    discoverContainer.innerHTML = '';
+    
+    // Default featured albums matching the mockup
+    const featuredAlbums = [
+      {
+        id: 'pl-movie-0', // Ek Tha Tiger -> Aether Waves
+        title: 'Aether Waves',
+        artist: 'Midnight Pulse',
+        coverUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&q=80',
+        active: true
+      },
+      {
+        id: 'pl-movie-7', // Rockstar -> Nova Horizon
+        title: 'Nova Horizon',
+        artist: 'Cosmic Echo',
+        coverUrl: 'https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?auto=format&fit=crop&w=300&q=80'
+      },
+      {
+        id: 'pl-movie-2', // Yeh Jawaani -> Indigo Dreams
+        title: 'Indigo Dreams',
+        artist: 'Luminous Kid',
+        coverUrl: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=300&q=80'
+      },
+      {
+        id: 'pl-movie-4', // Dhurandhar -> Neon City
+        title: 'Neon City',
+        artist: 'Cyber Funk',
+        coverUrl: 'https://images.unsplash.com/photo-1515621061946-eff1c2a352bd?auto=format&fit=crop&w=300&q=80'
+      },
+      {
+        id: 'pl-movie-1', // Aashiqui 2 -> Velvet Nights
+        title: 'Velvet Nights',
+        artist: 'Soul Echoes',
+        coverUrl: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=300&q=80'
+      },
+      {
+        id: 'pl-movie-3', // 3 Idiots -> Prism Theory
+        title: 'Prism Theory',
+        artist: 'Spectral Flow',
+        coverUrl: 'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?auto=format&fit=crop&w=300&q=80'
+      },
+      {
+        id: 'pl-movie-8', // Kabir Singh -> Astral Journey
+        title: 'Astral Journey',
+        artist: 'Space Cadets',
+        coverUrl: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=300&q=80'
+      },
+      {
+        id: 'pl-movie-5', // Om Shanti Om -> Gravity Drop
+        title: 'Gravity Drop',
+        artist: 'Bass Collective',
+        coverUrl: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=300&q=80'
+      },
+      {
+        id: 'pl-movie-6', // Zindagi Na Milegi -> Urban Tales
+        title: 'Urban Tales',
+        artist: 'Vinyl Souls',
+        coverUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=300&q=80'
+      },
+      {
+        id: 'pl-movie-9', // Ae Dil Hai Mushkil -> Digital Rain
+        title: 'Digital Rain',
+        artist: 'The Grid',
+        coverUrl: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=300&q=80'
+      }
+    ];
+
+    featuredAlbums.forEach(album => {
+      const col = document.createElement('div');
+      col.classList.add('col-6', 'col-md-4', 'col-lg-3', 'mb-4');
+      
+      const isActive = album.active ? 'active-album-card' : '';
+      
+      col.innerHTML = `
+        <div class="discover-album-card glass-card p-3 h-100 ${isActive}" data-playlist-id="${album.id}" style="border: 1px solid var(--surface-border); border-radius: 12px; transition: transform 0.3s, box-shadow 0.3s; background: rgba(28,28,38,0.4); backdrop-filter: blur(10px);">
+          <div class="discover-album-cover-container mb-3 position-relative rounded overflow-hidden" style="cursor: pointer;">
+            <img src="${album.coverUrl}" alt="${album.title}" class="discover-album-img w-100 h-100 object-fit-cover" style="aspect-ratio: 1; transition: transform 0.3s;" />
+            <div class="discover-album-overlay d-flex align-items-center justify-content-center" style="position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); opacity: 0; transition: opacity 0.2s;">
+              <button class="btn btn-info rounded-circle play-discover-btn" data-playlist-id="${album.id}" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">▶</button>
+            </div>
+            <button class="favorite-star-btn position-absolute bottom-2 right-2 btn p-0 text-white-50 fs-5" style="z-index: 5; border:none; background:none;">★</button>
+          </div>
+          <h6 class="text-white text-truncate mb-1 font-gilroy-bold">${album.title}</h6>
+          <p class="text-white-50 text-truncate small mb-0">${album.artist}</p>
+        </div>
+      `;
+
+      // Hover overlay effects
+      const cardCover = col.querySelector('.discover-album-cover-container');
+      const img = col.querySelector('.discover-album-img');
+      const overlay = col.querySelector('.discover-album-overlay');
+      cardCover.addEventListener('mouseenter', () => {
+        if(img) img.style.transform = 'scale(1.08)';
+        if(overlay) overlay.style.opacity = '1';
+      });
+      cardCover.addEventListener('mouseleave', () => {
+        if(img) img.style.transform = 'scale(1.0)';
+        if(overlay) overlay.style.opacity = '0';
+      });
+
+      col.querySelector('.discover-album-card').addEventListener('click', (e) => {
+        if (e.target.closest('.play-discover-btn') || e.target.closest('.favorite-star-btn')) return;
+        this.switchTab('playlist-detail', album.id);
+      });
+
+      col.querySelector('.play-discover-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        const pl = Database.getPlaylists().find(p => p.id === album.id);
+        if (pl && pl.tracks.length > 0) {
+          this.setQueue(pl.tracks, 0);
+        }
+      });
+
+      const starBtn = col.querySelector('.favorite-star-btn');
+      starBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        starBtn.classList.toggle('active');
+        starBtn.style.color = starBtn.classList.contains('active') ? '#00f2fe' : 'rgba(255,255,255,0.5)';
+      });
+
+      discoverContainer.appendChild(col);
+    });
+  },
+
+  async searchYouTubeAndRender(query) {
+    const resultsContainer = document.getElementById('discover-yt-results');
+    const spinner = document.getElementById('discover-yt-spinner');
+    const resultsSection = document.getElementById('discover-yt-section');
+
+    if (!resultsContainer || !resultsSection) return;
+
+    if (spinner) spinner.classList.remove('d-none');
+    resultsSection.classList.remove('d-none');
+    resultsContainer.innerHTML = '';
+
+    try {
+      const { YouTubeService } = await import('./youtube.js');
+      const results = await YouTubeService.search(query);
+      
+      if (spinner) spinner.classList.add('d-none');
+      
+      if (results.length === 0) {
+        resultsContainer.innerHTML = `<div class="col-12 text-center text-white-50 py-3">No results found on YouTube Music.</div>`;
+        return;
+      }
+
+      results.forEach(track => {
+        const isImported = this.tracks.some(t => String(t.id) === String(track.id) || (t.isYouTube && t.videoId === track.videoId));
+
+        const col = document.createElement('div');
+        col.classList.add('col-12', 'col-md-6', 'mb-3');
+        
+        col.innerHTML = `
+          <div class="yt-search-card glass-card d-flex align-items-center p-2" data-video-id="${track.videoId}" style="border: 1px solid var(--surface-border); border-radius: 10px; background: rgba(28,28,38,0.4); backdrop-filter: blur(10px);">
+            <img src="${track.coverUrl}" alt="${track.title}" class="yt-card-cover rounded" style="width: 50px; height: 50px; object-fit: cover;" />
+            <div class="flex-grow-1 ms-3 text-truncate">
+              <h6 class="mb-0 text-white text-truncate font-gilroy-bold text-capitalize">${track.title}</h6>
+              <small class="text-white-50 text-truncate d-block">${track.artist}</small>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <button class="btn btn-outline-info btn-sm rounded-circle play-yt-btn" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;" title="Stream Now">▶</button>
+              <button class="btn btn-sm rounded-circle import-yt-btn ${isImported ? 'btn-success disabled' : 'btn-outline-light'}" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;" title="${isImported ? 'Imported' : 'Import Track'}">
+                ${isImported ? '✓' : '＋'}
+              </button>
+            </div>
+          </div>
+        `;
+
+        col.querySelector('.play-yt-btn').addEventListener('click', () => {
+          if (!this.tracks.some(t => String(t.id) === String(track.id))) {
+            this.tracks.push(track);
+          }
+          this.setQueue([track.id], 0);
+        });
+
+        const importBtn = col.querySelector('.import-yt-btn');
+        if (!isImported) {
+          importBtn.addEventListener('click', async () => {
+            try {
+              importBtn.classList.remove('btn-outline-light');
+              importBtn.classList.add('btn-success', 'disabled');
+              importBtn.innerHTML = '✓';
+              
+              const saved = await Database.saveTrack(null, {
+                title: track.title,
+                artist: track.artist,
+                album: 'YouTube Music',
+                genre: 'YouTube Stream',
+                duration: track.duration,
+                coverUrl: track.coverUrl,
+                streamUrl: track.streamUrl,
+                isYouTube: true
+              });
+
+              this.tracks.push(saved);
+              await this.refreshTracks();
+              this.renderSongsTable();
+              alert(`"${track.title}" has been successfully imported to your library!`);
+            } catch (err) {
+              console.error("Failed to import YouTube track:", err);
+              alert("Failed to import track.");
+              importBtn.classList.remove('btn-success', 'disabled');
+              importBtn.classList.add('btn-outline-light');
+              importBtn.innerHTML = '＋';
+            }
+          });
+        }
+
+        resultsContainer.appendChild(col);
+      });
+    } catch (err) {
+      console.error("YouTube search error:", err);
+      if (spinner) spinner.classList.add('d-none');
+      resultsContainer.innerHTML = `<div class="col-12 text-center text-danger py-3">Error fetching search results. Please try again.</div>`;
     }
   },
 
@@ -1210,6 +1468,14 @@ export const PlayerUI = {
       });
     });
 
+    // Sidebar Playlists Shortcuts
+    document.querySelectorAll('.sidebar-nav-item-playlist').forEach((item) => {
+      item.addEventListener('click', () => {
+        const playlistId = item.dataset.playlistId;
+        this.switchTab('playlist-detail', playlistId);
+      });
+    });
+
     // Bottom Player Controls
     const playBtn = document.getElementById('player-play-btn');
     if (playBtn) playBtn.addEventListener('click', () => this.togglePlayPause());
@@ -1250,16 +1516,27 @@ export const PlayerUI = {
       });
     }
 
-    // Search bar filtering
+    // Search bar filtering and YouTube Search
     const searchInput = document.getElementById('search-input');
     if (searchInput) {
       searchInput.addEventListener('input', (e) => {
         const filterVal = e.target.value;
-        // Auto navigate to songs library pane if searching
-        if (this.activeTab !== 'songs' && filterVal.trim() !== '') {
+        if (this.activeTab !== 'discover' && this.activeTab !== 'songs' && filterVal.trim() !== '') {
           this.switchTab('songs');
         }
-        this.renderSongsTable(filterVal);
+        if (this.activeTab === 'songs') {
+          this.renderSongsTable(filterVal);
+        }
+      });
+
+      searchInput.addEventListener('keypress', async (e) => {
+        if (e.key === 'Enter') {
+          const query = searchInput.value.trim();
+          if (query !== '') {
+            this.switchTab('discover');
+            await this.searchYouTubeAndRender(query);
+          }
+        }
       });
     }
 

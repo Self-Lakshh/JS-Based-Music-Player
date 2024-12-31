@@ -282,7 +282,7 @@ export const LyricsEngine = {
 [01:07.00] <01:07.00> Cyan <01:08.50> horizons <01:10.50> shining <01:12.50> bright!
 [01:15.00] <01:15.00> (Outro <01:20.00> Beat <01:25.00> Echoes <01:30.00> Out)
       `;
-    } else if (typeof trackId === 'string' && trackId.startsWith('bolly-')) {
+    } else {
       lrc = this.getBollywoodLyrics(trackId, title, artist, duration);
     }
     
