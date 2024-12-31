@@ -910,6 +910,51 @@ body {
   text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
+/* --- DISCOVER PAGE & YOUTUBE STYLING --- */
+
+.active-album-card {
+  border: 1px solid var(--accent-color) !important;
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.25);
+  transform: scale(1.02);
+}
+
+.discover-album-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 0 15px rgba(217, 70, 239, 0.15);
+}
+
+.favorite-star-btn {
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  transition: color 0.2s, transform 0.2s;
+}
+
+.favorite-star-btn:hover {
+  transform: scale(1.2);
+  color: var(--accent-color) !important;
+}
+
+.favorite-star-btn.active {
+  color: var(--accent-color) !important;
+}
+
+.yt-search-card {
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.yt-search-card:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  transform: translateX(4px);
+}
+
+.user-profile-section {
+  border-bottom: 1px solid var(--surface-border);
+  padding-bottom: 1.25rem;
+}
+
+.sidebar-nav-item-playlist:hover {
+  color: var(--accent-color) !important;
+}
+
 /* --- RESPONSIVENESS MEDIA BREAKPOINTS --- */
 
 @media (max-width: 1200px) {

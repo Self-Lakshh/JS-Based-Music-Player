@@ -33,17 +33,55 @@
           <span class="logo-text">BeatStream</span>
         </div>
 
-        <nav class="flex-grow-1">
-          <h6 class="sidebar-nav-title">Menu</h6>
+        <!-- User Profile in Sidebar -->
+        <div class="user-profile-section d-flex align-items-center gap-3 mb-4 px-2">
+          <div class="position-relative">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80" alt="Sarah J. Avatar" class="user-avatar rounded-circle" style="width: 40px; height: 40px; border: 2px solid var(--accent-color); object-fit: cover;" />
+            <div class="avatar-dot bg-success rounded-circle position-absolute bottom-0 right-0" style="width: 10px; height: 10px; border: 2px solid #000;"></div>
+          </div>
+          <div class="text-white">
+            <span class="user-avatar-label text-white-50 d-block small" style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px;">Avatar</span>
+            <h6 class="font-gilroy-bold user-name mb-0" style="font-size: 0.9rem;">Sarah J.</h6>
+          </div>
+        </div>
+
+        <nav class="flex-grow-1 overflow-y-auto">
+          <h6 class="sidebar-nav-title">Library</h6>
           <ul class="sidebar-nav-list">
-            <li class="sidebar-nav-item active" data-tab="home">
+            <li class="sidebar-nav-item active" data-tab="discover">
+              <span>🧭</span> <span>Discover</span>
+            </li>
+            <li class="sidebar-nav-item" data-tab="home">
               <span>🏠</span> <span>Home</span>
             </li>
             <li class="sidebar-nav-item" data-tab="songs">
-              <span>🎵</span> <span>Library</span>
+              <span>🎵</span> <span>Library (Local)</span>
             </li>
             <li class="sidebar-nav-item" data-tab="playlists">
               <span>📂</span> <span>Playlists</span>
+            </li>
+          </ul>
+
+          <h6 class="sidebar-nav-title">My Music</h6>
+          <ul class="sidebar-nav-list">
+            <li class="sidebar-nav-item" data-tab="favorites">
+              <span>⭐</span> <span>Favorites</span>
+            </li>
+            <li class="sidebar-nav-item" data-tab="recently-played">
+              <span>🕒</span> <span>Recently Played</span>
+            </li>
+          </ul>
+
+          <h6 class="sidebar-nav-title">Playlists</h6>
+          <ul class="sidebar-nav-list">
+            <li class="sidebar-nav-item-playlist text-truncate" data-playlist-id="favorites" style="padding: 6px 15px; font-size: 0.85rem; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 10px; transition: color 0.2s;">
+              <span>🔀</span> <span class="ms-1">Synthwave Nights</span>
+            </li>
+            <li class="sidebar-nav-item-playlist text-truncate" data-playlist-id="procedural" style="padding: 6px 15px; font-size: 0.85rem; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 10px; transition: color 0.2s;">
+              <span>🏖</span> <span class="ms-1">Chill Lo-Fi</span>
+            </li>
+            <li class="sidebar-nav-item-playlist text-truncate" data-playlist-id="pl-movie-0" style="padding: 6px 15px; font-size: 0.85rem; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 10px; transition: color 0.2s;">
+              <span>⚡</span> <span class="ms-1">Groove Essentials</span>
             </li>
           </ul>
 
@@ -93,8 +131,46 @@
           </div>
         </header>
 
+        <!-- TAB: DISCOVER -->
+        <div id="pane-discover" class="tab-pane">
+          <div class="row mb-4">
+            <div class="col-12 d-flex justify-content-between align-items-center flex-wrap gap-2">
+              <div>
+                <h1 class="font-gilroy-bold text-white mb-2">Discover New Beats</h1>
+                <p class="text-white-50">Explore featured albums, original movie soundtracks, or stream from YouTube Music.</p>
+              </div>
+              <div class="d-flex align-items-center gap-3">
+                <span class="text-white-50 small">Sort by</span>
+                <span class="text-white-50 small cursor-pointer hover-link">Filter ▾</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- YouTube Search Results Section -->
+          <div id="discover-yt-section" class="mb-5 d-none">
+            <h4 class="font-gilroy-bold text-white mb-3 d-flex align-items-center gap-2">
+              <span>🔍</span> YouTube Music Results
+            </h4>
+            <div id="discover-yt-spinner" class="d-flex align-items-center gap-3 mb-3 d-none">
+              <div class="spinner-border text-info spinner-border-sm" role="status"></div>
+              <span class="text-white-50 small">Searching YouTube Music...</span>
+            </div>
+            <div id="discover-yt-results" class="row">
+              <!-- Dynamically populated YouTube results -->
+            </div>
+          </div>
+
+          <!-- Featured Albums Grid -->
+          <div class="mb-5">
+            <h4 class="font-gilroy-bold text-white mb-4">Featured Albums</h4>
+            <div id="discover-featured-albums" class="row">
+              <!-- Dynamically populated with mockup albums -->
+            </div>
+          </div>
+        </div>
+
         <!-- TAB: HOME / DASHBOARD -->
-        <div id="pane-home" class="tab-pane">
+        <div id="pane-home" class="tab-pane d-none">
           <div class="row mb-4">
             <div class="col-12">
               <h1 id="home-greeting" class="font-gilroy-bold text-white mb-2">Good Day, Music Lover</h1>
