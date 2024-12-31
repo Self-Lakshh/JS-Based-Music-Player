@@ -23,24 +23,21 @@ export const YouTubeService = {
   },
 
   async getApiKey() {
-    let key = localStorage.getItem('BEATSTREAM_YT_API_KEY');
-    if (key) return key;
-
     try {
       const response = await fetch('.env');
       if (response.ok) {
         const text = await response.text();
         const match = text.match(/YT_API_KEY\s*=\s*(.*)/);
         if (match && match[1]) {
-          key = match[1].trim().replace(/['"]/g, '');
+          const key = match[1].trim().replace(/['"]/g, '');
           localStorage.setItem('BEATSTREAM_YT_API_KEY', key);
           return key;
         }
       }
     } catch (e) {
-      // Ignore
+      console.warn("Could not fetch .env file, falling back to LocalStorage:", e);
     }
-    return null;
+    return localStorage.getItem('BEATSTREAM_YT_API_KEY');
   },
 
   parseISO8601Duration(duration) {
